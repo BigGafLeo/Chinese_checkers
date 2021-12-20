@@ -34,13 +34,13 @@ public class Game implements Runnable{
      * Licznik graczy, którzy dołączyli do gry
      */
     private int playerNumber = 0;
-    private final boolean GAME_STARTED = false;
+    private boolean GAME_STARTED = false;
     private boolean GAME_ENDED = false;
 
     /**
      * Zmienna wskazująca na gracza o danym numerze, który ma teraz ruch
      */
-    private int whoseTurn = 0;
+    private int whoseTurn;
 
     /**
      * Ile graczy jeszcze nie wygrało
@@ -51,10 +51,12 @@ public class Game implements Runnable{
         serverSocket = new ServerSocket(serverSocketNumber);
     }
 
+    @Override
     public void run() {
         ExecutorService threads = Executors.newFixedThreadPool(6);
-        while(playerNumber<6 || !GAME_STARTED){
+        while(playerNumber<6 && !GAME_STARTED){
             playerNumber++;
+            //Czekanie na graczy i dodawanie ich do tablicy
             try {
                 threads.execute(players[playerNumber] = new PlayerThread(serverSocket.accept(), playerNumber));
             } catch (IOException e) {
@@ -62,13 +64,13 @@ public class Game implements Runnable{
             }
         }
         board = new Board(playerNumber);
+        whoseTurn = (int)(Math.random() * playerNumber + 1);
         newTurn();
     }
 
     public void newTurn(){
         if(!GAME_ENDED){
             howManyPlayersActive = calculateHowManyPlayersActive();
-
             if(howManyPlayersActive < 2){
                 GAME_ENDED = true;
             }
@@ -79,6 +81,10 @@ public class Game implements Runnable{
         }
     }
 
+    /**
+     * Metoda wyznaczjąca kolejnego gracza, który może wykonać ruch.
+     * Nie może on być ani nullem, ani nie może być już zwyciezcą
+     */
     void setPlayerTurn(){
         if(players[whoseTurn] != null && !players[whoseTurn].isWinner()){
             players[whoseTurn].setTurn();
@@ -89,12 +95,19 @@ public class Game implements Runnable{
         }
     }
 
+    /**
+     * Budzenie wszystkich graczy po skończonej turze
+     */
     void awakeAllPlayers(){
         for(PlayerThread thread : players){
             thread.notify();
         }
     }
 
+    /**
+     * Obliczanie, ile jeszcze graczy czeka na koniec gry
+     * @return ile graczy jeszcze nie wygrało
+     */
     int calculateHowManyPlayersActive(){
         int counter = 0;
         for(PlayerThread player : players){
@@ -103,6 +116,10 @@ public class Game implements Runnable{
         return counter;
     }
 
+    /**
+     *
+     * @param name
+     */
     void announceLastWinner(String name){
         for(PlayerThread player : players){
             if(player != null) player.lastWinner = name;
@@ -123,8 +140,8 @@ public class Game implements Runnable{
         private boolean IS_YOUR_TURN = false;
 
         PlayerThread(Socket socket, int number){
-            this.socket=socket;
-            this.number=number;
+            this.socket = socket;
+            this.number = number;
         }
 
         public void setTurn(){
@@ -157,6 +174,11 @@ public class Game implements Runnable{
                 } while (name.isBlank());
                 out.println("IMIĘ_ZAAKCEPTOWANE");
                 out.println("NUMER: " + number);
+                if(number == 1){
+                    do{}
+                    while(in.nextLine() == "START");
+                    GAME_STARTED = true;
+                }
                 while(true){
                     waitForNewTurn();
                     oos.writeObject(board.getBoard());
