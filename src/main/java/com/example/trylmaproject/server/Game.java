@@ -23,7 +23,7 @@ public class Game implements Runnable{
     /**
      * Tablica wątków obsługujących poszczególnych graczy
      */
-    protected PlayerThread[] players = new PlayerThread[6];
+    private PlayerThread[] players = new PlayerThread[6];
 
     /**
      * Model do gry w chińskie warcaby (patrz: MVC)
@@ -33,7 +33,7 @@ public class Game implements Runnable{
     /**
      * Licznik graczy, którzy dołączyli do gry
      */
-    private int playerNumber = 0;
+    private volatile int playerNumber = 0;
     private boolean GAME_STARTED = false;
     private boolean GAME_ENDED = false;
 
@@ -47,7 +47,7 @@ public class Game implements Runnable{
      */
     private int howManyPlayersActive;
 
-    Game(int serverSocketNumber) throws IOException {
+    public Game(int serverSocketNumber) throws IOException {
         serverSocket = new ServerSocket(serverSocketNumber);
     }
 
@@ -58,7 +58,7 @@ public class Game implements Runnable{
             playerNumber++;
             //Czekanie na graczy i dodawanie ich do tablicy
             try {
-                threads.execute(players[playerNumber] = new PlayerThread(serverSocket.accept(), playerNumber));
+                threads.execute(players[playerNumber - 1] = new PlayerThread(serverSocket.accept(), playerNumber));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -104,6 +104,11 @@ public class Game implements Runnable{
         }
     }
 
+    public String getName(int playerNumber){
+        return players[playerNumber].getName();
+    }
+
+
     /**
      * Obliczanie, ile jeszcze graczy czeka na koniec gry
      * @return ile graczy jeszcze nie wygrało
@@ -132,7 +137,7 @@ public class Game implements Runnable{
 
         private ObjectOutputStream oos;
         private final Socket socket;
-        private final int number;
+        private int number;
         private PrintWriter out;
         private Scanner in;
         private String name;
@@ -148,27 +153,35 @@ public class Game implements Runnable{
             IS_YOUR_TURN = true;
         }
 
+        public String getName(){
+            return name;
+        }
+
         public boolean isWinner(){return board.isWinner(number);}
 
         public void waitForNewTurn(){
             //localTurn++;
             //IS_YOUR_TURN = false;
             //while(localTurn<turn){}
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            synchronized (this){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
         }
 
         @Override
         public void run() {
             try{
                 in = new Scanner(socket.getInputStream());
-                out = new PrintWriter(socket.getOutputStream());
+                out = new PrintWriter(socket.getOutputStream(), true);
                 oos = new ObjectOutputStream(socket.getOutputStream());
+                out.println();
                 do {
-                    out.println("IMIĘ:");
+                    out.println("IMIE:");
                     name = in.nextLine();
                     if (name == null) return;
                 } while (name.isBlank());
