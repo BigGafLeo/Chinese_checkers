@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Klasa implementująca tablicę do chińskich warcabów
  * @author Mateusz Teplicki
  */
-public class Board implements Serializable {
+public class Board{
 
     public final int W = 25, H = 17;
     public final int[] DIMENSION = {12,11,10,9,0,1,2,3,4,3,2,1,0,9,10,11,12};
