@@ -1,6 +1,7 @@
 package com.example.trylmaproject.server;
 
 import com.example.trylmaproject.exceptions.IllegalMoveException;
+import com.example.trylmaproject.exceptions.IllegalNumberOfPlayers;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -63,7 +64,10 @@ public class Game implements Runnable{
                 e.printStackTrace();
             }
         }
-        board = new Board(playerNumber);
+        try{board = new Board(playerNumber);}
+        catch (IllegalNumberOfPlayers i){
+            i.printStackTrace();
+        }
         whoseTurn = (int)(Math.random() * playerNumber + 1);
         newTurn();
     }
@@ -100,7 +104,9 @@ public class Game implements Runnable{
      */
     void awakeAllPlayers(){
         for(PlayerThread thread : players){
-            thread.notify();
+            synchronized (thread){
+                thread.notify();
+            }
         }
     }
 
@@ -159,17 +165,15 @@ public class Game implements Runnable{
 
         public boolean isWinner(){return board.isWinner(number);}
 
-        public void waitForNewTurn(){
+        public synchronized void waitForNewTurn(){
             //localTurn++;
             //IS_YOUR_TURN = false;
             //while(localTurn<turn){}
-            synchronized (this){
                 try {
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
 
         }
 
