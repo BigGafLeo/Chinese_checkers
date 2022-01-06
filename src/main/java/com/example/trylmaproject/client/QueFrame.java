@@ -18,9 +18,12 @@ public class QueFrame extends JFrame {
     private JTextField playerName;
     private String nameToServer;
     private boolean nameReadyToSend = false;
+    private int playerNumber;
+    private boolean readyToPlay;
 
-    public QueFrame()
+    public QueFrame(int playerNumber)
     {
+        this.playerNumber = playerNumber;
         gameName.setText("Chinese - Checkers");
         gameName.setEditable(false);
         quePanel.add(gameName);
@@ -45,7 +48,7 @@ public class QueFrame extends JFrame {
         if(playerNumber == 1)
             startGame.addActionListener(event ->
             {
-
+                readyToPlay = true;
             });
         else
             startGame.addActionListener(event ->
@@ -66,5 +69,9 @@ public class QueFrame extends JFrame {
 
     public boolean isNameReadyToSend() {
         return nameReadyToSend;
+    }
+
+    public boolean isReadyToPlay() {
+        return readyToPlay;
     }
 }

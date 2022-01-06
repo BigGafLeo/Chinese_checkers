@@ -10,12 +10,13 @@ public class Client {
     Scanner in;
     PrintWriter out;
     QueFrame queFrame;
+    int playerNumber;
 
     public Client(String serverAddress)
     {
         this.serverAddress = serverAddress;
 
-        queFrame = new QueFrame();
+
     }
     private void run() throws IOException
     {
@@ -25,11 +26,17 @@ public class Client {
             in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream(),true);
 
+
             while (in.hasNextLine())
             {
                 var line = in.nextLine();
+                if(line.startsWith("NUMER: "))
+                    playerNumber = Integer.parseInt(line.substring(8));
+                queFrame = new QueFrame(playerNumber);
                 if (line.startsWith("IMIE:") && queFrame.isNameReadyToSend())
-                    out.println();
+                    out.println(queFrame.getNameToServer());
+                if(queFrame.isReadyToPlay())
+                    out.println("START");
             }
         }
     }
