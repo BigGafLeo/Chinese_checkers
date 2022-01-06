@@ -65,6 +65,10 @@ public class Client {
 
     public static void main(String[] args) {
         Client client = new Client("localhost");
-
+        try {
+            client.run();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
