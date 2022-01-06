@@ -52,11 +52,17 @@ public class QueFrame extends JFrame {
         {
             nameToServer = playerName.getText();
             nameReadyToSend = true;
+            synchronized (this){
+                notify();
+            }
         });
         if(playerNumber == 1)
             startGame.addActionListener(event ->
             {
                 readyToPlay = true;
+                synchronized (this){
+                    notify();
+                }
             });
         else
             startGame.addActionListener(event ->

@@ -170,6 +170,7 @@ public class Game implements Runnable{
             //IS_YOUR_TURN = false;
             //while(localTurn<turn){}
                 try {
+                    System.out.println("czekam");
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -184,14 +185,23 @@ public class Game implements Runnable{
                 out = new PrintWriter(socket.getOutputStream(), true);
                 //oos = new ObjectOutputStream(socket.getOutputStream());
                 out.println("NUMER: " + number);
+                System.out.println("NUMER: " + number);
                 do {
                     out.println("IMIE:");
+                    System.out.println("IMIE:");
                     name = in.nextLine();
+                    System.out.println(name);
                 } while (name.isBlank());
                 out.println("IMIĘ_ZAAKCEPTOWANE");
+                String line;
                 if(number == 1){
-                    do{}
-                    while(in.nextLine() != "START");
+                    do{
+                        System.out.println("nastart");
+                        line = in.nextLine();
+                        System.out.println(line);
+                    }
+                    while(line != "START");
+                    System.out.println("START");
                     GAME_STARTED = true;
                 }
                 while(true){
