@@ -20,23 +20,31 @@ public class QueFrame extends JFrame {
     private boolean nameReadyToSend = false;
     private int playerNumber;
     private boolean readyToPlay;
+    int DEFAULT_WIDTH =600;
+    int DEFAULT_HEIGHT = 800;
 
     public QueFrame(int playerNumber)
     {
         this.playerNumber = playerNumber;
+
+        quePanel = new JPanel();
+        quePanel.setLayout(new BoxLayout(quePanel,3));
+        gameName = new JTextField();
         gameName.setText("Chinese - Checkers");
         gameName.setEditable(false);
         quePanel.add(gameName);
+        playerName = new JTextField();
         playerName.setText("Wprowadź swoją nazwę");
         playerName.setEditable(true);
         quePanel.add(playerName);
+        checkName = new JButton();
         checkName.setText("Zatwierdź nazwę gracza");
         quePanel.add(checkName);
+        startGame = new JButton();
         startGame.setText("Rozpoczni gre");
         quePanel.add(startGame);
 
-
-
+        this.setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
         /**
          * Ustawienie actionlistnerów dla przycisków w gui z uwzględnieniem pierwszego gracza który ma aktywny przycisk początku rozgrywki.
          */

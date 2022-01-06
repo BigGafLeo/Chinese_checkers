@@ -47,7 +47,7 @@ public class Client {
                     while(queFrame.isReadyToPlay());
                     out.println("START");
                 }
-                board = (Field[][])ois.readObject()
+                board = (Field[][])ois.readObject();
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
