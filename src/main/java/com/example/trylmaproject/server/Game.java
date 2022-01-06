@@ -184,13 +184,13 @@ public class Game implements Runnable{
                 out = new PrintWriter(socket.getOutputStream(), true);
                 oos = new ObjectOutputStream(socket.getOutputStream());
                 out.println();
+                out.println("NUMER: " + number);
                 do {
                     out.println("IMIE:");
                     name = in.nextLine();
                     if (name == null) return;
                 } while (name.isBlank());
                 out.println("IMIĘ_ZAAKCEPTOWANE");
-                out.println("NUMER: " + number);
                 if(number == 1){
                     do{}
                     while(in.nextLine() == "START");
