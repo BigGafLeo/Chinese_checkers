@@ -2,8 +2,10 @@ package com.example.trylmaproject.server;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 
+import java.awt.geom.Ellipse2D;
 import java.io.Serializable;
 
 
@@ -16,7 +18,7 @@ public class Field implements Serializable {
     private int posx;
     private int posy;
     private int playerNumber;
-    private Circle circle;
+    private Ellipse2D.Double circle;
     private Color color;
     public static final int DEFAULT_RADIUS = 15;
     //private Color[] colorList = {Color.BLACK, Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED, Color.PURPLE, Color.BROWN};
@@ -55,15 +57,15 @@ public class Field implements Serializable {
 
     public boolean isHit(int x, int y)
     {
-        return circle.getBoundsInLocal().contains(x,y);
+        return circle.getBounds().contains(x,y);
     }
 
-    public Circle fieldDrawing(int posy, int posx)
+    public Ellipse2D.Double fieldDrawing(int posy, int posx)
     {
-        circle = new Circle(posx,posy,DEFAULT_RADIUS);
+        circle = new Ellipse2D.Double(posx,posy,DEFAULT_RADIUS,DEFAULT_RADIUS);
         return circle;
     }
-    public Circle getCircle()
+    public Ellipse2D.Double getCircle()
     {
         return circle;
     }

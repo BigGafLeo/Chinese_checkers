@@ -17,7 +17,7 @@ public class BoardGuiPanel extends JPanel
 
     public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS * 2 + 12 * Field.DEFAULT_RADIUS;
     public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2 + 16 * Field.DEFAULT_RADIUS;
-    private Circle current;
+    private Ellipse2D.Double current;
     Field[][] board;
     public BoardGuiPanel(Field[][] board)
     {
@@ -35,24 +35,24 @@ public class BoardGuiPanel extends JPanel
 //                    return board[i][j];
 //    }
 
-    public void paintComponent(Graphics g,Field[][] board)
+    public void paintComponent(Graphics g)
     {
         Graphics2D g2D = (Graphics2D) g;
         for(int i = 0; i<24;i++)
             for(int j = 0; j<16;j++)
             {
-                if(board[i][j] != null)
+                if(board[j][i] != null)
                 {
-                    g2D.draw((Shape) board[i][j].fieldDrawing(j*Field.DEFAULT_RADIUS,i/2*Field.DEFAULT_RADIUS));
+                    g2D.draw(board[j][i].fieldDrawing(i*Field.DEFAULT_RADIUS,j/2*Field.DEFAULT_RADIUS));
                 }
             }
 
     }
-    public void paintComponent(Graphics g)
-    {
-        Graphics2D g2D = (Graphics2D) g;
-        g2D.draw(new Rectangle2D.Double(10,10,20,20));
-    }
+//    public void paintComponent(Graphics g)
+//    {
+//        Graphics2D g2D = (Graphics2D) g;
+//        g2D.draw(new Rectangle2D.Double(10,10,20,20));
+//    }
     private class MouseHandler extends MouseAdapter
     {
         public void mousePressed(MouseEvent event)
