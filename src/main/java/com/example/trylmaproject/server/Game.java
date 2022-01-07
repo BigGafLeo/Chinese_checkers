@@ -48,28 +48,18 @@ public class Game implements Runnable{
      */
     private int howManyPlayersActive;
 
+    private Thread playerCreatorWorker;
+
+    private ExecutorService playerCreatorThread;
+
     public Game(int serverSocketNumber) throws IOException {
         serverSocket = new ServerSocket(serverSocketNumber);
     }
 
     @Override
     public void run() {
-        ExecutorService threads = Executors.newFixedThreadPool(6);
-        while(playerNumber<6 && !GAME_STARTED){
-            playerNumber++;
-            //Czekanie na graczy i dodawanie ich do tablicy
-            try {
-                threads.execute(players[playerNumber - 1] = new PlayerThread(serverSocket.accept(), playerNumber));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try{board = new Board(playerNumber);}
-        catch (IllegalNumberOfPlayers i){
-            i.printStackTrace();
-        }
-        whoseTurn = (int)(Math.random() * playerNumber + 1);
-        newTurn();
+        playerCreatorThread = Executors.newFixedThreadPool(1);
+        playerCreatorThread.execute(new PlayerCreator());
     }
 
     public void newTurn(){
@@ -104,8 +94,10 @@ public class Game implements Runnable{
      */
     void awakeAllPlayers(){
         for(PlayerThread thread : players){
-            synchronized (thread){
-                thread.notify();
+            if(thread != null){
+                synchronized (thread){
+                    thread.notify();
+                }
             }
         }
     }
@@ -122,7 +114,7 @@ public class Game implements Runnable{
     int calculateHowManyPlayersActive(){
         int counter = 0;
         for(PlayerThread player : players){
-            if(player != null && !player.isWinner()) counter++;
+            if(player != null && !player.isWinner() && player.IS_ACTIVE) counter++;
         }
         return counter;
     }
@@ -133,11 +125,26 @@ public class Game implements Runnable{
      */
     void announceLastWinner(String name){
         for(PlayerThread player : players){
-            if(player != null) player.lastWinner = name;
+            if(player != null && player.IS_ACTIVE) player.lastWinner = name;
         }
     }
 
+    class PlayerCreator implements Runnable{
 
+        @Override
+        public void run() {
+            ExecutorService threads = Executors.newFixedThreadPool(6);
+            while(playerNumber<6 && !GAME_STARTED){
+                playerNumber++;
+                //Czekanie na graczy i dodawanie ich do tablicy
+                try {
+                    threads.execute(players[playerNumber - 1] = new PlayerThread(serverSocket.accept(), playerNumber));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     class PlayerThread implements Runnable{
 
@@ -149,6 +156,7 @@ public class Game implements Runnable{
         private String name;
         private String lastWinner;
         private boolean IS_YOUR_TURN = false;
+        private boolean IS_ACTIVE = true;
 
         PlayerThread(Socket socket, int number){
             this.socket = socket;
@@ -166,43 +174,55 @@ public class Game implements Runnable{
         public boolean isWinner(){return board.isWinner(number);}
 
         public synchronized void waitForNewTurn(){
-            //localTurn++;
-            //IS_YOUR_TURN = false;
-            //while(localTurn<turn){}
-                try {
-                    System.out.println("czekam");
-                    wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+            try {
+                System.out.println("czekam");
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void run() {
+            if(GAME_STARTED) {
+                IS_ACTIVE = false;
+                return;
+            }
             try{
                 in = new Scanner(socket.getInputStream());
-                out = new PrintWriter(socket.getOutputStream(), true);
-                //oos = new ObjectOutputStream(socket.getOutputStream());
-                out.println("NUMER: " + number);
+                //out = new PrintWriter(socket.getOutputStream(), true);
+                oos = new ObjectOutputStream(socket.getOutputStream());
+                String helper = "NUMER: " + number;
+                oos.writeObject(helper);
                 System.out.println("NUMER: " + number);
                 do {
-                    out.println("IMIE:");
+                    oos.writeObject("IMIE:");
                     System.out.println("IMIE:");
                     name = in.nextLine();
                     System.out.println(name);
                 } while (name.isBlank());
-                out.println("IMIĘ_ZAAKCEPTOWANE");
                 String line;
                 if(number == 1){
-                    do{
+                    while(true){
                         System.out.println("nastart");
                         line = in.nextLine();
-                        System.out.println(line);
+                        if(!line.equals("START") || playerNumber < 2 || playerNumber == 5 + 1 || playerNumber > 6){
+                            oos.writeObject("JESZCZE_RAZ");
+                        }
+                        else{
+                            oos.writeObject("AKCEPTACJA");
+                            break;
+                        }
                     }
-                    while(line != "START");
-                    System.out.println("START");
+                    System.out.println("START2");
                     GAME_STARTED = true;
+
+                    try{board = new Board(playerNumber);}
+                    catch (IllegalNumberOfPlayers i){
+                        i.printStackTrace();
+                    }
+                    whoseTurn = (int)(Math.random() * playerNumber + 1);
+                    newTurn();
                 }
                 while(true){
                     waitForNewTurn();
@@ -211,12 +231,15 @@ public class Game implements Runnable{
                         out.println("KONIEC_GRY: " + lastWinner);
                         break;
                     }
-                    if(!Objects.equals(lastWinner, "")) out.println("ZWYCIEZCA: " + lastWinner);
-                    else out.println("BRAK_ZWYCIEZCY");
+                    helper = "ZWYCIEZCA: " + lastWinner;
+                    if(!Objects.equals(lastWinner, "")) oos.writeObject(helper);
+                    else{
+                        oos.writeObject("BRAK_ZWYCIEZCY");
+                    }
                     lastWinner = "";
 
                     if(IS_YOUR_TURN){
-                        out.println("KOLEJKA: TAK");
+                        oos.writeObject("KOLEJKA: TAK");
                         while(true){
 
                             String[] commandArray = in.nextLine().split(" ");
@@ -226,15 +249,15 @@ public class Game implements Runnable{
                                     try {
                                         board.doMove(number, Integer.parseInt(commandArray[1]), Integer.parseInt(commandArray[2]), Integer.parseInt(commandArray[3]), Integer.parseInt(commandArray[4]));
                                     } catch (IllegalMoveException exception) {
-                                        out.println("POWTÓRZ");
+                                        oos.writeObject("POWTÓRZ");
                                     }
-                                    out.println("AKCEPTACJA");
+                                    oos.writeObject("AKCEPTACJA");
                                     if(isWinner()){
                                         announceLastWinner(name);
                                     }
                                     newTurn();
                                 } else {
-                                    out.println("POWTÓRZ");
+                                    oos.writeObject("POWTÓRZ");
                                 }
                             }
                         }

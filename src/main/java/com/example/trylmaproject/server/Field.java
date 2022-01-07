@@ -11,16 +11,22 @@ import java.io.Serializable;
  * @author Mateusz Teplicki
  */
 public class Field implements Serializable {
+    private int posx;
+    private int posy;
     private int playerNumber;
-    private Color color;
-    private Color[] colorList = {Color.BLACK, Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED, Color.PURPLE, Color.BROWN};
-
-    public Color getColor() {
-        return color;
-    }
+    //private Color color;
+    //private Color[] colorList = {Color.BLACK, Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED, Color.PURPLE, Color.BROWN};
 
     public int getPlayerNumber() {
         return playerNumber;
+    }
+
+    public int getPosx(){
+        return posx;
+    }
+
+    public int getPosy(){
+        return posy;
     }
 
     /**
@@ -34,6 +40,11 @@ public class Field implements Serializable {
         else {
             this.playerNumber = playerNumber;
         }
-        color = colorList[this.playerNumber];
+        //color = colorList[this.playerNumber];
+    }
+
+    Field(int posy, int posx){
+        this.posx=posx;
+        this.posy=posy;
     }
 }

@@ -87,10 +87,10 @@ public class Board {
         this.numberOfPlayers = numberOfPlayers;
 
         //Tworzenie modelu tablicy, jeszcze bez graczy
-        for (int h = 0; h <= H; h++) {
+        for (int h = 0; h < H; h++) {
             int localDimension = DIMENSION[h];
             for (int w = localDimension; w <= W - localDimension; w += 2) {
-                board[h][w] = new Field();
+                board[h][w] = new Field(h,w);
             }
         }
 
