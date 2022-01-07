@@ -34,8 +34,8 @@ public class Game implements Runnable{
     /**
      * Licznik graczy, którzy dołączyli do gry
      */
-    private volatile int playerNumber = 0;
-    private boolean GAME_STARTED = false;
+    private volatile int playerNumber = 1;
+    private boolean TURN_STARTED = false;
     private boolean GAME_ENDED = false;
 
     /**
@@ -60,6 +60,18 @@ public class Game implements Runnable{
     public void run() {
         playerCreatorThread = Executors.newFixedThreadPool(1);
         playerCreatorThread.execute(new PlayerCreator());
+        while(true){
+            synchronized (this){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(TURN_STARTED){
+                newTurn();
+            }
+        }
     }
 
     public void newTurn(){
@@ -93,8 +105,29 @@ public class Game implements Runnable{
      * Budzenie wszystkich graczy po skończonej turze
      */
     void awakeAllPlayers(){
+        boolean IS_ABLE_TO_START = false;
+        do{
+            synchronized (this){
+                try {
+                    wait(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            IS_ABLE_TO_START = true;
+            for(PlayerThread thread : players){
+                if(thread != null && thread.IS_ACTIVE){
+                    if(!thread.IS_WAITING) {
+                        IS_ABLE_TO_START = false;
+                        break;
+                    }
+                }
+            }
+        }
+        while(!IS_ABLE_TO_START);
+
         for(PlayerThread thread : players){
-            if(thread != null){
+            if(thread != null && thread.IS_ACTIVE){
                 synchronized (thread){
                     thread.notify();
                 }
@@ -134,11 +167,11 @@ public class Game implements Runnable{
         @Override
         public void run() {
             ExecutorService threads = Executors.newFixedThreadPool(6);
-            while(playerNumber<6 && !GAME_STARTED){
-                playerNumber++;
+            while(playerNumber<6 && !TURN_STARTED){
                 //Czekanie na graczy i dodawanie ich do tablicy
                 try {
-                    threads.execute(players[playerNumber - 1] = new PlayerThread(serverSocket.accept(), playerNumber));
+                    threads.execute(players[playerNumber - 1] = new PlayerThread(serverSocket.accept(), playerNumber++));
+                    if(TURN_STARTED) playerNumber--;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -157,6 +190,7 @@ public class Game implements Runnable{
         private String lastWinner;
         private boolean IS_YOUR_TURN = false;
         private boolean IS_ACTIVE = true;
+        private boolean IS_WAITING = false;
 
         PlayerThread(Socket socket, int number){
             this.socket = socket;
@@ -176,7 +210,11 @@ public class Game implements Runnable{
         public synchronized void waitForNewTurn(){
             try {
                 System.out.println("czekam");
+                IS_WAITING = true;
                 wait();
+                IS_WAITING = false;
+
+                System.out.println("zaczynam");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -184,13 +222,12 @@ public class Game implements Runnable{
 
         @Override
         public void run() {
-            if(GAME_STARTED) {
+            if(TURN_STARTED) {
                 IS_ACTIVE = false;
                 return;
             }
             try{
                 in = new Scanner(socket.getInputStream());
-                //out = new PrintWriter(socket.getOutputStream(), true);
                 oos = new ObjectOutputStream(socket.getOutputStream());
                 String helper = "NUMER: " + number;
                 oos.writeObject(helper);
@@ -206,7 +243,7 @@ public class Game implements Runnable{
                     while(true){
                         System.out.println("nastart");
                         line = in.nextLine();
-                        if(!line.equals("START") || playerNumber < 2 || playerNumber == 5 + 1 || playerNumber > 6){
+                        if(!line.equals("START") || playerNumber < 2 + 1 || playerNumber == 5 + 1 || playerNumber > 6 + 1){
                             oos.writeObject("JESZCZE_RAZ");
                         }
                         else{
@@ -215,20 +252,22 @@ public class Game implements Runnable{
                         }
                     }
                     System.out.println("START2");
-                    GAME_STARTED = true;
+                    TURN_STARTED = true;
 
                     try{board = new Board(playerNumber);}
                     catch (IllegalNumberOfPlayers i){
                         i.printStackTrace();
                     }
                     whoseTurn = (int)(Math.random() * playerNumber + 1);
-                    newTurn();
+                    synchronized(Game.this){
+                        Game.this.notify();
+                    }
                 }
                 while(true){
                     waitForNewTurn();
                     oos.writeObject(board.getBoard());
                     if(GAME_ENDED){
-                        out.println("KONIEC_GRY: " + lastWinner);
+                        oos.writeObject("KONIEC_GRY: " + lastWinner);
                         break;
                     }
                     helper = "ZWYCIEZCA: " + lastWinner;

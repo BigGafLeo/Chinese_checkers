@@ -82,7 +82,7 @@ public class Board {
      * @param numberOfPlayers liczba graczy, którzy przystąpili do gry
      * @throws IllegalNumberOfPlayers liczbq graczy jest nieprawidłowa
      */
-    Board(int numberOfPlayers) throws IllegalNumberOfPlayers {
+    public Board(int numberOfPlayers) throws IllegalNumberOfPlayers {
 
         this.numberOfPlayers = numberOfPlayers;
 
