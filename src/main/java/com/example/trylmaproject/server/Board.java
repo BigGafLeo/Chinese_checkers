@@ -82,7 +82,8 @@ public class Board {
      * @param numberOfPlayers liczba graczy, którzy przystąpili do gry
      * @throws IllegalNumberOfPlayers liczbq graczy jest nieprawidłowa
      */
-    Board(int numberOfPlayers) throws IllegalNumberOfPlayers {
+    //TODO Zmienić z public Board na private (potrzebne do testów)
+    public Board(int numberOfPlayers) throws IllegalNumberOfPlayers {
 
         this.numberOfPlayers = numberOfPlayers;
 

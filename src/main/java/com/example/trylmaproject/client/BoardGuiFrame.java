@@ -16,8 +16,9 @@ public class BoardGuiFrame extends JFrame
 	public BoardGuiFrame(int playerNumber, Board board)
 	{
 		panel = new BoardGuiPanel(board);
+		this.add(panel);
 		this.playerNumber = playerNumber;
-
+		pack();
 	}
 }
 //public class BoardGuiFrame extends JFrame

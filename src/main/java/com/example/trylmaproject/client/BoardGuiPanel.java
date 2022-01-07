@@ -1,6 +1,7 @@
 package com.example.trylmaproject.client;
 
 import com.example.trylmaproject.server.Board;
+import com.example.trylmaproject.server.Field;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,37 +9,28 @@ import java.awt.geom.Ellipse2D;
 
 public class BoardGuiPanel extends JPanel
 {
-    public final static int DEFAULT_PAWN_RADIUS = 15;
-    public final static int DEFAULT_BOARD_WIDTH = 13 * DEFAULT_PAWN_RADIUS * 2 + 12 * DEFAULT_PAWN_RADIUS;
-    public final static int DEFAULT_BOARD_HEIGHT = 17 * DEFAULT_PAWN_RADIUS * 2 + 16 * DEFAULT_PAWN_RADIUS;
+
+    public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS * 2 + 12 * Field.DEFAULT_RADIUS;
+    public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2 + 16 * Field.DEFAULT_RADIUS;
     public BoardGuiPanel(Board board)
     {
+        setPreferredSize(new Dimension(DEFAULT_BOARD_WIDTH,DEFAULT_BOARD_HEIGHT));
+    }
+
+    protected void paintComponent(Graphics g,Board board)
+    {
+        Graphics2D g2D = (Graphics2D) g;
+        Field[][] tempBoard = board.getBoard();
         for(int i = 0; i<24;i++)
             for(int j = 0; j<16;j++)
             {
-                if(board[i][j] != null)
+                if(tempBoard[i][j] != null)
                 {
-                    Circles circle = new Circles(i/2*DEFAULT_PAWN_RADIUS,j*DEFAULT_PAWN_RADIUS,DEFAULT_PAWN_RADIUS);
-                    add(circle);
+                    g2D.draw((Shape) tempBoard[i][j].fieldDrawing(j*Field.DEFAULT_RADIUS,i*Field.DEFAULT_RADIUS));
                 }
             }
 
-
     }
-//    protected void paintComponent(Graphics g,Board board)
-//    {
-//        Graphics2D g2D = (Graphics2D) g;
-//        for(int i = 0; i<24;i++)
-//            for(int j = 0; j<16;j++)
-//            {
-//                if(board[i][j] != null)
-//                {
-//                    Circles circle = new Circles(i/2*DEFAULT_PAWN_RADIUS,j*DEFAULT_PAWN_RADIUS,DEFAULT_PAWN_RADIUS);
-//                    g2D.draw(circle);
-//                }
-//            }
-//
-//    }
 }
 //public class BoardGuiPanel extends JPanel
 //{
