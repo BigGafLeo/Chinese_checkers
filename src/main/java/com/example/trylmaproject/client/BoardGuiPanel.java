@@ -2,25 +2,42 @@ package com.example.trylmaproject.client;
 
 import com.example.trylmaproject.server.Board;
 import com.example.trylmaproject.server.Field;
+import javafx.scene.shape.Circle;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 
 public class BoardGuiPanel extends JPanel
 {
 
     public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS * 2 + 12 * Field.DEFAULT_RADIUS;
     public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2 + 16 * Field.DEFAULT_RADIUS;
-    public BoardGuiPanel(Board board)
+    private Circle current;
+    Field[][] board;
+    public BoardGuiPanel(Field[][] board)
     {
+        setBackground(Color.WHITE);
+        this.board = board;
         setPreferredSize(new Dimension(DEFAULT_BOARD_WIDTH,DEFAULT_BOARD_HEIGHT));
+        addMouseListener(new MouseHandler());
+        repaint();
     }
+//    public Circle find(Point2D point)
+//    {
+//        for(int i = 0 ; i<17; i++)
+//            for (int j = 0 ; j<25; j++)
+//                if(board[i][j].getCircle().contains(point))
+//                    return board[i][j];
+//    }
 
-    protected void paintComponent(Graphics g,Board board)
+    protected void paintComponent(Graphics g,Field[][] board)
     {
         Graphics2D g2D = (Graphics2D) g;
-        Field[][] tempBoard = board.getBoard();
+        Field[][] tempBoard = board;
         for(int i = 0; i<24;i++)
             for(int j = 0; j<16;j++)
             {
@@ -30,6 +47,13 @@ public class BoardGuiPanel extends JPanel
                 }
             }
 
+    }
+    private class MouseHandler extends MouseAdapter
+    {
+        public void mousePressed(MouseEvent event)
+        {
+//            current = find(event.getPoint());
+        }
     }
 }
 //public class BoardGuiPanel extends JPanel

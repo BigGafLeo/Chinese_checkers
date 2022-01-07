@@ -17,6 +17,7 @@ public class Client {
     ObjectInputStream ois;
     ObjectOutputStream oos;
     QueFrame queFrame;
+    BoardGuiFrame boardGuiFrame;
     Field[][] board;
     int playerNumber;
 
@@ -70,6 +71,11 @@ public class Client {
             }
             board = (Field[][])ois.readObject();
             System.out.println("tak");
+            queFrame.setVisible(false);
+
+            boardGuiFrame = new BoardGuiFrame(playerNumber,board);
+            boardGuiFrameCreaction();
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -81,9 +87,16 @@ public class Client {
     private void queFrameCreaction()
     {
         queFrame.setDefaultCloseOperation(3);
-        queFrame.setTitle("Test");
+        queFrame.setTitle("Kolejka");
         queFrame.setVisible(true);
         queFrame.setLocationRelativeTo((Component) null);
+    }
+    private void boardGuiFrameCreaction()
+    {
+        boardGuiFrame.setDefaultCloseOperation(3);
+        boardGuiFrame.setTitle("Warcaby");
+        boardGuiFrame.setVisible(true);
+        boardGuiFrame.setLocationRelativeTo((Component) null);
     }
 
     public static void main(String[] args) {

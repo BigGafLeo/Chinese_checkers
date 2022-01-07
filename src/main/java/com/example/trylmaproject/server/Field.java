@@ -63,5 +63,9 @@ public class Field implements Serializable {
         circle = new Circle(posx,posy,DEFAULT_RADIUS);
         return circle;
     }
+    public Circle getCircle()
+    {
+        return circle;
+    }
 
 }

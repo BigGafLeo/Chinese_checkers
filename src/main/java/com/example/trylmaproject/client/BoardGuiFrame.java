@@ -12,11 +12,20 @@ public class BoardGuiFrame extends JFrame
 {
 	private JPanel panel;
 	private int playerNumber;
+	private JButton skipButton;
 
-	public BoardGuiFrame(int playerNumber, Board board)
+	public BoardGuiFrame(int playerNumber, Field[][] board)
 	{
+		this.setLayout(new BorderLayout());
 		panel = new BoardGuiPanel(board);
-		this.add(panel);
+		this.add(panel,BorderLayout.CENTER);
+
+		skipButton = new JButton("Pomiń ture");
+		skipButton.addActionListener(event ->
+		{
+			//TODO Dodać obsługe klawisza
+		});
+		this.add(skipButton,BorderLayout.SOUTH);
 		this.playerNumber = playerNumber;
 		pack();
 	}
