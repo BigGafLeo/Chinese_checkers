@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class BoardGuiPanel extends JPanel
 {
@@ -34,7 +35,7 @@ public class BoardGuiPanel extends JPanel
 //                    return board[i][j];
 //    }
 
-    protected void paintComponent(Graphics g,Field[][] board)
+    public void paintComponent(Graphics g,Field[][] board)
     {
         Graphics2D g2D = (Graphics2D) g;
         for(int i = 0; i<24;i++)
@@ -46,6 +47,11 @@ public class BoardGuiPanel extends JPanel
                 }
             }
 
+    }
+    public void paintComponent(Graphics g)
+    {
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.draw(new Rectangle2D.Double(10,10,20,20));
     }
     private class MouseHandler extends MouseAdapter
     {
