@@ -17,7 +17,8 @@ public class BoardGuiPanel extends JPanel
 
     public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS * 2;
     public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2;
-    private Ellipse2D.Double current;
+    private Field pawnToMove;
+    private Field fieldMoveTo;
     Field[][] board;
     public BoardGuiPanel(Field[][] board)
     {
@@ -27,13 +28,15 @@ public class BoardGuiPanel extends JPanel
         addMouseListener(new MouseHandler());
         repaint();
     }
-//    public Circle find(Point2D point)
-//    {
-//        for(int i = 0 ; i<17; i++)
-//            for (int j = 0 ; j<25; j++)
-//                if(board[i][j].getCircle().contains(point))
-//                    return board[i][j];
-//    }
+    //TODO Ustawić drugą metodę find w której upewniamy się że pole na które chce się ruszyć gracz jest puste
+    public Field find(Point2D point)
+    {
+        for(int i = 0 ; i<17; i++)
+            for (int j = 0 ; j<25; j++)
+                if(board[i][j].getCircle().contains(point))
+                    return board[i][j];
+        return null;
+    }
 
     public void paintComponent(Graphics g)
     {
@@ -44,46 +47,51 @@ public class BoardGuiPanel extends JPanel
                 if(board[i][j] != null)
                 {
                     g2D.draw(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,((double) j)/2*Field.DEFAULT_RADIUS));
+                    if (board[i][j].getPlayerNumber()!=0)
+                    {
+                        g2D.setPaint(colorForPlayer(board[i][j].getPlayerNumber()));
+                        g2D.fill(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,((double) j)/2*Field.DEFAULT_RADIUS));
+                        g2D.setPaint(Color.BLACK);
+                    }
                 }
             }
 
     }
-//    public void paintComponent(Graphics g)
-//    {
-//        Graphics2D g2D = (Graphics2D) g;
-//        g2D.draw(new Rectangle2D.Double(10,10,20,20));
-//    }
+    private Color colorForPlayer(int playerNumber)
+    {
+        switch (playerNumber)
+        {
+            case 1:
+                return Color.BLUE;
+
+            case 2:
+                return Color.GREEN;
+
+            case 3:
+                return Color.RED;
+
+            case 4:
+                return Color.CYAN;
+
+            case 5:
+                return Color.magenta;
+
+            case 6:
+                return Color.pink;
+
+        }
+        return Color.WHITE;
+    }
+
     private class MouseHandler extends MouseAdapter
     {
         public void mousePressed(MouseEvent event)
         {
-//            current = find(event.getPoint());
+            if(pawnToMove==null)
+                pawnToMove = find(event.getPoint());
+            else
+                fieldMoveTo = find(event.getPoint());
         }
     }
 }
-//public class BoardGuiPanel extends JPanel
-//{
-//    public final static int DEFAULT_PAWN_RADIUS = 15;
-//    public final static int DEFAULT_BOARD_WIDTH = 13 * DEFAULT_PAWN_RADIUS * 2 + 12 * DEFAULT_PAWN_RADIUS;
-//    public final static int DEFAULT_BOARD_HEIGHT = 17 * DEFAULT_PAWN_RADIUS * 2 + 16 * DEFAULT_PAWN_RADIUS;
-//
-//    public BoardGuiPanel()
-//    {
-//        this.setSize(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT);
-//        add(new DrawEmptyBoard());
-//    }
-//    class DrawEmptyBoard extends JComponent
-//    {
-//        public void paintComponent(Graphics g)
-//        {
-//            int centerX = 19 * DEFAULT_PAWN_RADIUS;
-//            int centerY = 1 * DEFAULT_PAWN_RADIUS;
-//
-//
-//            Graphics2D g2 = (Graphics2D) g;
-//            Ellipse2D circle = new Ellipse2D.Double();
-//            circle.setFrameFromCenter(centerX,centerY,centerX + DEFAULT_PAWN_RADIUS,centerY + DEFAULT_PAWN_RADIUS);
-//            g2.draw(circle);
-//        }
-//    }
-//}
+
