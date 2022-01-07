@@ -1,6 +1,8 @@
 package com.example.trylmaproject.server;
 
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 import java.io.Serializable;
 
@@ -14,7 +16,9 @@ public class Field implements Serializable {
     private int posx;
     private int posy;
     private int playerNumber;
-    //private Color color;
+    private Circle circle;
+    private Color color;
+    public static final int DEFAULT_RADIUS = 15;
     //private Color[] colorList = {Color.BLACK, Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED, Color.PURPLE, Color.BROWN};
 
     public int getPlayerNumber() {
@@ -46,5 +50,18 @@ public class Field implements Serializable {
     Field(int posy, int posx){
         this.posx=posx;
         this.posy=posy;
+
     }
+
+    public boolean isHit(int x, int y)
+    {
+        return circle.getBoundsInLocal().contains(x,y);
+    }
+
+    public Circle fieldDrawing(int posy, int posx)
+    {
+        circle = new Circle(posx,posy,DEFAULT_RADIUS);
+        return circle;
+    }
+
 }
