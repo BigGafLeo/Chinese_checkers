@@ -37,13 +37,12 @@ public class BoardGuiPanel extends JPanel
     protected void paintComponent(Graphics g,Field[][] board)
     {
         Graphics2D g2D = (Graphics2D) g;
-        Field[][] tempBoard = board;
         for(int i = 0; i<24;i++)
             for(int j = 0; j<16;j++)
             {
-                if(tempBoard[i][j] != null)
+                if(board[i][j] != null)
                 {
-                    g2D.draw((Shape) tempBoard[i][j].fieldDrawing(j*Field.DEFAULT_RADIUS,i*Field.DEFAULT_RADIUS));
+                    g2D.draw((Shape) board[i][j].fieldDrawing(j*Field.DEFAULT_RADIUS,i/2*Field.DEFAULT_RADIUS));
                 }
             }
 
