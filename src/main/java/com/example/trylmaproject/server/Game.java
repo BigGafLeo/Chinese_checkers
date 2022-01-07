@@ -34,7 +34,7 @@ public class Game implements Runnable{
     /**
      * Licznik graczy, którzy dołączyli do gry
      */
-    private volatile int playerNumber = 1;
+    private volatile int playerNumber = 0;
     private boolean TURN_STARTED = false;
     private boolean GAME_ENDED = false;
 
@@ -170,7 +170,7 @@ public class Game implements Runnable{
             while(playerNumber<6 && !TURN_STARTED){
                 //Czekanie na graczy i dodawanie ich do tablicy
                 try {
-                    threads.execute(players[playerNumber - 1] = new PlayerThread(serverSocket.accept(), playerNumber++));
+                    threads.execute(players[playerNumber] = new PlayerThread(serverSocket.accept(), ++playerNumber));
                     if(TURN_STARTED) playerNumber--;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -243,7 +243,7 @@ public class Game implements Runnable{
                     while(true){
                         System.out.println("nastart");
                         line = in.nextLine();
-                        if(!line.equals("START") || playerNumber < 2 + 1 || playerNumber == 5 + 1 || playerNumber > 6 + 1){
+                        if(!line.equals("START") || playerNumber < 2  || playerNumber == 5  || playerNumber > 6 ){
                             oos.writeObject("JESZCZE_RAZ");
                         }
                         else{
