@@ -20,7 +20,8 @@ public class Field implements Serializable {
     private int playerNumber;
     private Ellipse2D.Double circle;
     private Color color;
-    public static final int DEFAULT_RADIUS = 15;
+    public static final int DEFAULT_RADIUS = 40;
+    //TODO Ustawić skalowanie do wielkości okna
     //private Color[] colorList = {Color.BLACK, Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED, Color.PURPLE, Color.BROWN};
 
     public int getPlayerNumber() {
@@ -60,7 +61,7 @@ public class Field implements Serializable {
         return circle.getBounds().contains(x,y);
     }
 
-    public Ellipse2D.Double fieldDrawing(int posy, int posx)
+    public Ellipse2D.Double fieldDrawing(double posy, double posx)
     {
         circle = new Ellipse2D.Double(posx,posy,DEFAULT_RADIUS,DEFAULT_RADIUS);
         return circle;
