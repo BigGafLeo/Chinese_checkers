@@ -51,6 +51,17 @@ public class BoardGuiFrame extends JFrame
 	{
 
 	}
+
+	public String getMove() {
+		synchronized (panel){
+			try {
+				panel.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 }
 //public class BoardGuiFrame extends JFrame
 //{
