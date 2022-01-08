@@ -55,6 +55,7 @@ public class BoardGuiFrame extends JFrame
 	public void setTurn(boolean turn)
 	{
 		this.turn = turn;
+		panel.setIsYourTurn(turn);
 	}
 	public void endGame(String losser)
 	{

@@ -70,7 +70,10 @@ public class BoardGuiPanel extends JPanel
         };
     }
 
-
+    public void setIsYourTurn(boolean turn)
+    {
+        isYourTurn = turn;
+    }
     private int[] findPawn(Point2D point)
     {
         for(int i = 0 ; i<17; i++) {
@@ -98,20 +101,19 @@ public class BoardGuiPanel extends JPanel
     {
         public void mousePressed(MouseEvent event)
         {
-
-            if(pawnToMove == null) {
-                pawnToMove = findPawn(event.getPoint());
-            }
-            else if(fieldToMove ==null){
-                fieldToMove = findEmptyField(event.getPoint());
-            }
-
-            if(pawnToMove != null && fieldToMove != null)
-            {
-                synchronized (this){
-                    notifyAll();
+            if(isYourTurn) {
+                if (pawnToMove == null) {
+                    pawnToMove = findPawn(event.getPoint());
+                } else if (fieldToMove == null) {
+                    fieldToMove = findEmptyField(event.getPoint());
                 }
-                moveSignal = true;
+
+                if (pawnToMove != null && fieldToMove != null) {
+                    synchronized (this) {
+                        notifyAll();
+                    }
+                    moveSignal = true;
+                }
             }
         }
     }
