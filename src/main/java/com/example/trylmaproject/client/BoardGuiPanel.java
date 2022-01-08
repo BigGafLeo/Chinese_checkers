@@ -20,7 +20,7 @@ public class BoardGuiPanel extends JPanel
     private int[] pawnToMove;
     private int[] fieldToMove;
     private boolean isYourTurn = false;
-    Field[][] board;
+    private Field[][] board;
     private int playerNumber;
     public BoardGuiPanel(Field[][] board, int playerNumber)
     {
@@ -117,7 +117,7 @@ public class BoardGuiPanel extends JPanel
     {
         for(int i = 0 ; i<17; i++)
             for (int j = 0 ; j<25; j++)
-                if(board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == 0)
+                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == 0)
                 {
                     int[] temp = {i,j};
                     return temp;
@@ -139,7 +139,9 @@ public class BoardGuiPanel extends JPanel
 
             if(pawnToMove != null && fieldToMove != null)
             {
-                notify();
+                synchronized (this){
+                    notify();
+                }
             }
         }
     }
