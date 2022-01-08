@@ -20,6 +20,7 @@ public class BoardGuiFrameTest {
         boardGuiFrame.setTitle("Warcaby");
         boardGuiFrame.setVisible(true);
         boardGuiFrame.setLocationRelativeTo((Component) null);
+        System.out.println(boardGuiFrame.getMessage());
         synchronized (this){
             try {
                 wait();

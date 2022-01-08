@@ -22,6 +22,8 @@ public class BoardGuiPanel extends JPanel
     private boolean isYourTurn = false;
     Field[][] board;
     private int playerNumber;
+    public boolean moveSignal;
+
     public BoardGuiPanel(Field[][] board, int playerNumber)
     {
         this.board = board;
@@ -125,7 +127,10 @@ public class BoardGuiPanel extends JPanel
 
             if(pawnToMove != null && fieldToMove != null)
             {
-                notify();
+                synchronized (this){
+                    notifyAll();
+                }
+                moveSignal = true;
             }
         }
     }

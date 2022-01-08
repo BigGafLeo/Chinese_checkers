@@ -259,6 +259,7 @@ public class Game implements Runnable{
                     catch (IllegalNumberOfPlayers i){
                         i.printStackTrace();
                     }
+                    whoseTurn = (int)((Math.random() * (playerNumber - 1)) + 1);
                     synchronized(Game.this){
                         Game.this.notify();
                     }

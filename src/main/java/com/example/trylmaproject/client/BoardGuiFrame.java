@@ -68,22 +68,24 @@ public class BoardGuiFrame extends JFrame
 	}
 
 	public String getMessage() {
-		synchronized (panel){
+		while(true){
 			try {
-				panel.wait();
-				return panel.getMoveFromPanel();
+				synchronized (this){
+					wait(100);
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			if(breakSignal) {
+				breakSignal = false;
+				return "BREAK";
+			}
+			else if(panel.moveSignal){
+				panel.moveSignal = false;
+				return panel.getMoveFromPanel();
+			}
 		}
-		if(breakSignal) {
-			breakSignal = false;
-			return "BREAK";
-		}
-		else {
-			//TODO wysyłanie komunikatu z ruchem
-			return null;
-		}
+
 	}
 
 }

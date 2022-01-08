@@ -58,13 +58,12 @@ public class Client {
                 }
             }
             System.out.println("tak");
-            queFrame.setVisible(false);
 
 
-            while (true)
-            {
+            while (true) {
                 board = (Field[][])ois.readObject();
                 if(boardGuiFrame == null){
+                    queFrame.setVisible(false);
                     boardGuiFrame = new BoardGuiFrame(playerNumber,board);
                     boardGuiFrameCreaction();
                 }
@@ -88,7 +87,7 @@ public class Client {
                             out.println("POMIN");
                             break;
                         }
-                        out.println(boardGuiFrame.getMessage());
+                        out.println(line);
                         line = (String)ois.readObject();
                         if (line.equals("AKCEPTACJA")){
                             line = (String)ois.readObject();
