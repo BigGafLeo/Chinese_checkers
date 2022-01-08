@@ -103,7 +103,7 @@ public class BoardGuiPanel extends JPanel
     {
         for(int i = 0 ; i<17; i++)
             for (int j = 0 ; j<25; j++)
-                if(board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == 0)
+                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == 0)
                 {
                     int[] temp = {i,j};
                     return temp;
@@ -116,10 +116,10 @@ public class BoardGuiPanel extends JPanel
         public void mousePressed(MouseEvent event)
         {
 
-            if(pawnToMove[0]==100) {
+            if(pawnToMove == null) {
                 pawnToMove = findPawn(event.getPoint());
             }
-            else {
+            else if(fieldToMove ==null){
                 fieldToMove = findEmptyField(event.getPoint());
             }
 
