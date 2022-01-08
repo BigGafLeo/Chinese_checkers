@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BoardTest.testIllegalMove1" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+    <module name="TrylmaProject" />
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="BoardTest" />
+    <option name="METHOD_NAME" value="testIllegalMove1" />
+    <option name="TEST_OBJECT" value="method" />
+    <option name="VM_PARAMETERS" value="-ea --add-exports com.example.trylmaproject/com.example.trylmaproject.exceptions=ALL-UNNAMED" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
