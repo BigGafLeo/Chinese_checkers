@@ -70,7 +70,23 @@ public class Game implements Runnable{
                 }
             }
             if(GAME_STARTED){
-                newTurn();
+                whoseTurn = (int)(Math.floor(Math.random() * (playerNumber)));
+                System.out.println("whoseturn = " + whoseTurn);
+                runGame();
+            }
+        }
+    }
+
+    public void runGame(){
+        while(true){
+            newTurn();
+            awakeAllPlayers();
+            synchronized (this){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -84,7 +100,6 @@ public class Game implements Runnable{
             else{
                 setPlayerTurn();
             }
-            awakeAllPlayers();
         }
     }
 
@@ -95,9 +110,12 @@ public class Game implements Runnable{
     void setPlayerTurn(){
         if(players[whoseTurn] != null && !players[whoseTurn].isWinner() && players[whoseTurn].IS_ACTIVE){
             players[whoseTurn].setTurn();
+            System.out.println("whoseturnset = " + whoseTurn);
+            whoseTurn = (whoseTurn + 1) % playerNumber;
         }
         else{
             whoseTurn = (whoseTurn + 1) % playerNumber;
+            System.out.println("whoseturnNOTset = " + whoseTurn);
             setPlayerTurn();
         }
     }
@@ -259,7 +277,6 @@ public class Game implements Runnable{
                     catch (IllegalNumberOfPlayers i){
                         i.printStackTrace();
                     }
-                    whoseTurn = (int)((Math.random() * (playerNumber - 1)) + 1);
                     synchronized(Game.this){
                         Game.this.notify();
                     }
@@ -312,6 +329,7 @@ public class Game implements Runnable{
                             synchronized(Game.this){
                                 Game.this.notify();
                             }
+                            IS_YOUR_TURN = false;
                         }
                     }
                     else oos.writeObject("KOLEJKA: NIE");
