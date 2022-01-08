@@ -95,16 +95,18 @@ public class BoardGuiPanel extends JPanel
 
     private int[] findPawn(Point2D point)
     {
-        for(int i = 0 ; i<17; i++)
-            for (int j = 0 ; j<25; j++)
-                if(board[i][j].getCircle().contains(point) /*&& board[i][j].getPlayerNumber() == playerNumber */)
+        for(int i = 0 ; i<17; i++) {
+            for (int j = 0 ; j<25; j++) {
+                if(board[i][j] != null && board[i][j].getCircle().contains(point) /*&& board[i][j].getPlayerNumber() == playerNumber */)
                 {
-//                    int[] temp = {i,j};
                     int[] temp = new int[2];
                     temp[0] = i;
                     temp[1] = j;
                     return temp;
                 }
+            }
+        }
+
 //        return null;
         int[] temp = new int[2];
         temp[0] = 1;
