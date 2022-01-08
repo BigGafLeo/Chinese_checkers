@@ -98,7 +98,7 @@ public class Client {
                         out.println(line);
                         line = (String)ois.readObject();
                         if (line.equals("AKCEPTACJA")){
-                            line = (String)ois.readObject();
+                            boardGuiFrame.boardRepaint((Field[][])ois.readObject());
                         }
                     }
                 }

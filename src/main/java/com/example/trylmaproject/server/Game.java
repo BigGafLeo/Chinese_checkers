@@ -267,6 +267,7 @@ public class Game implements Runnable{
                 while(true){
                     waitForNewTurn();
                     oos.writeObject(board.getBoard());
+                    oos.reset();
                     if(GAME_ENDED){
                         oos.writeObject("KONIEC_GRY: " + lastWinner);
                         break;
@@ -293,10 +294,12 @@ public class Game implements Runnable{
                                     //RUCH: [POZYCJAX_POCZ] [POZYCJAY_POCZ] [POZYCJAX_KONC], [POZYCJAY_KONC]
                                     try {
                                         board.doMove(number, Integer.parseInt(commandArray[1]), Integer.parseInt(commandArray[2]), Integer.parseInt(commandArray[3]), Integer.parseInt(commandArray[4]));
+                                        oos.writeObject("AKCEPTACJA");
+                                        oos.writeObject(board.getBoard());
                                     } catch (IllegalMoveException exception) {
                                         oos.writeObject("POWTÓRZ");
+                                        oos.reset();
                                     }
-                                    oos.writeObject("AKCEPTACJA");
                                     if(isWinner()){
                                         announceLastWinner(name);
                                         break;
