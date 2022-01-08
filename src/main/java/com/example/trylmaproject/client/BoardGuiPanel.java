@@ -24,15 +24,8 @@ public class BoardGuiPanel extends JPanel
     private int playerNumber;
     public BoardGuiPanel(Field[][] board, int playerNumber)
     {
-        this.playerNumber = playerNumber;
         this.board = board;
-
-        pawnToMove = new int[2];
-        fieldToMove = new int[2];
-        pawnToMove[0] = 100;
-        pawnToMove[1] = 100;
-        fieldToMove[0] = 100;
-        fieldToMove[1] = 100;
+        this.playerNumber = playerNumber;
 
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(DEFAULT_BOARD_WIDTH,DEFAULT_BOARD_HEIGHT));
@@ -97,7 +90,7 @@ public class BoardGuiPanel extends JPanel
     {
         for(int i = 0 ; i<17; i++) {
             for (int j = 0 ; j<25; j++) {
-                if(board[i][j] != null && board[i][j].getCircle().contains(point) /*&& board[i][j].getPlayerNumber() == playerNumber */)
+                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == playerNumber)
                 {
                     int[] temp = {i,j};
                     return temp;
@@ -141,7 +134,7 @@ public class BoardGuiPanel extends JPanel
         String temp = new String("RUCH: "+ pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1]);
         pawnToMove = null;
         fieldToMove = null;
-        return temp
+        return temp;
     }
 }
 
