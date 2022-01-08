@@ -20,19 +20,12 @@ public class BoardGuiPanel extends JPanel
     private int[] pawnToMove;
     private int[] fieldToMove;
     private boolean isYourTurn = false;
-    private Field[][] board;
+    Field[][] board;
     private int playerNumber;
     public BoardGuiPanel(Field[][] board, int playerNumber)
     {
-        this.playerNumber = playerNumber;
         this.board = board;
-
-        pawnToMove = new int[2];
-        fieldToMove = new int[2];
-        pawnToMove[0] = 100;
-        pawnToMove[1] = 100;
-        fieldToMove[0] = 100;
-        fieldToMove[1] = 100;
+        this.playerNumber = playerNumber;
 
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(DEFAULT_BOARD_WIDTH,DEFAULT_BOARD_HEIGHT));
@@ -97,21 +90,14 @@ public class BoardGuiPanel extends JPanel
     {
         for(int i = 0 ; i<17; i++) {
             for (int j = 0 ; j<25; j++) {
-                if(board[i][j] != null && board[i][j].getCircle().contains(point) /*&& board[i][j].getPlayerNumber() == playerNumber */)
+                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == playerNumber)
                 {
-                    int[] temp = new int[2];
-                    temp[0] = i;
-                    temp[1] = j;
+                    int[] temp = {i,j};
                     return temp;
                 }
             }
         }
-
-//        return null;
-        int[] temp = new int[2];
-        temp[0] = 1;
-        temp[1] = 1;
-        return temp;
+        return null;
     }
     private int[] findEmptyField(Point2D point)
     {
@@ -130,24 +116,25 @@ public class BoardGuiPanel extends JPanel
         public void mousePressed(MouseEvent event)
         {
 
-            if(pawnToMove[0]==100) {
+            if(pawnToMove == null) {
                 pawnToMove = findPawn(event.getPoint());
             }
-            else {
+            else if(fieldToMove ==null){
                 fieldToMove = findEmptyField(event.getPoint());
             }
 
             if(pawnToMove != null && fieldToMove != null)
             {
-                synchronized (this){
-                    notify();
-                }
+                notify();
             }
         }
     }
     public String getMoveFromPanel()
     {
-        return new String("RUCH: "+ pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1]);
+        String temp = new String("RUCH: "+ pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1]);
+        pawnToMove = null;
+        fieldToMove = null;
+        return temp;
     }
 }
 

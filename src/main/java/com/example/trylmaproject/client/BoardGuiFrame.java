@@ -18,10 +18,14 @@ public class BoardGuiFrame extends JFrame
 	private String[] scoreTable;
 	private boolean breakSignal = false;
 	private boolean turn = false;
+	private int homManyPlayers;
 
 	public BoardGuiFrame(int playerNumber, Field[][] board)
 	{
 		this.setLayout(new BorderLayout());
+		this.playerNumber = playerNumber;
+		homManyPlayers = 0;
+
 		panel = new BoardGuiPanel(board, playerNumber);
 		this.add(panel,BorderLayout.CENTER);
 
@@ -47,10 +51,11 @@ public class BoardGuiFrame extends JFrame
 	{
 		panel.panelRepaint(board);
 	}
-	//TODO Dodać implementacje tych metod
+
 	public void whoWinner(String winner)
 	{
-
+		scoreTable[homManyPlayers] = winner;
+		homManyPlayers++;
 	}
 	public void setTurn(boolean turn)
 	{
@@ -58,7 +63,8 @@ public class BoardGuiFrame extends JFrame
 	}
 	public void endGame(String losser)
 	{
-
+		scoreTable[homManyPlayers] = losser;
+		JOptionPane.showConfirmDialog(this, "Koniec gry\n 1." + scoreTable.toString());
 	}
 
 	public String getMessage() {
