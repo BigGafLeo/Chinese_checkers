@@ -9,10 +9,8 @@ import java.util.Scanner;
 
 public class Client {
     String serverAddress;
-    Scanner in;
     PrintWriter out;
     ObjectInputStream ois;
-    ObjectOutputStream oos;
     QueFrame queFrame;
     BoardGuiFrame boardGuiFrame;
     Field[][] board;
@@ -97,9 +95,7 @@ public class Client {
                 else boardGuiFrame.setTurn(false);
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

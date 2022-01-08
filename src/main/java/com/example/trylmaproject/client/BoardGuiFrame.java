@@ -1,14 +1,9 @@
 package com.example.trylmaproject.client;
 
-import com.example.trylmaproject.server.Board;
 import com.example.trylmaproject.server.Field;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class BoardGuiFrame extends JFrame
 {

@@ -21,6 +21,7 @@ public class BoardGuiFrameTest {
         boardGuiFrame.setVisible(true);
         boardGuiFrame.setLocationRelativeTo((Component) null);
         System.out.println(boardGuiFrame.getMessage());
+        System.out.println(boardGuiFrame.getMessage());
         synchronized (this){
             try {
                 wait();

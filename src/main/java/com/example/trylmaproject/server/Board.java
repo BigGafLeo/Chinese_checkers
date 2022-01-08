@@ -165,21 +165,21 @@ public class Board {
 
         //W zależności ile graczy dołączyło się do gry, połącz ich z polami startowymi na tablicy
         switch (numberOfPlayers) {
-            case 2:
+            case 2 -> {
                 for (Field f : startingFields[1]) f.setPlayerNumber(1);
                 playerStartingField[1 - 1] = 1;
                 for (Field f : startingFields[4]) f.setPlayerNumber(2);
                 playerStartingField[2 - 1] = 4;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 for (Field f : startingFields[1]) f.setPlayerNumber(1);
                 playerStartingField[1 - 1] = 1;
                 for (Field f : startingFields[3]) f.setPlayerNumber(2);
                 playerStartingField[2 - 1] = 3;
                 for (Field f : startingFields[5]) f.setPlayerNumber(3);
                 playerStartingField[3 - 1] = 5;
-                break;
-            case 4:
+            }
+            case 4 -> {
                 for (Field f : startingFields[0]) f.setPlayerNumber(1);
                 playerStartingField[1 - 1] = 0;
                 for (Field f : startingFields[2]) f.setPlayerNumber(2);
@@ -188,8 +188,8 @@ public class Board {
                 playerStartingField[3 - 1] = 3;
                 for (Field f : startingFields[5]) f.setPlayerNumber(4);
                 playerStartingField[4 - 1] = 5;
-                break;
-            case 6:
+            }
+            case 6 -> {
                 for (Field f : startingFields[1]) f.setPlayerNumber(1);
                 playerStartingField[1 - 1] = 1;
                 for (Field f : startingFields[2]) f.setPlayerNumber(2);
@@ -202,9 +202,8 @@ public class Board {
                 playerStartingField[5 - 1] = 5;
                 for (Field f : startingFields[0]) f.setPlayerNumber(6);
                 playerStartingField[6 - 1] = 0;
-                break;
-            default:
-                throw new IllegalNumberOfPlayers();
+            }
+            default -> throw new IllegalNumberOfPlayers();
         }
     }
 }

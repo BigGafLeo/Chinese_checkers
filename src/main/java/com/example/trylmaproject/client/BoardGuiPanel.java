@@ -1,16 +1,12 @@
 package com.example.trylmaproject.client;
 
-import com.example.trylmaproject.server.Board;
 import com.example.trylmaproject.server.Field;
-import javafx.scene.shape.Circle;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 public class BoardGuiPanel extends JPanel
 {
@@ -63,28 +59,15 @@ public class BoardGuiPanel extends JPanel
 
     private Color colorForPlayer(int playerNumber)
     {
-        switch (playerNumber)
-        {
-            case 1:
-                return Color.BLUE;
-
-            case 2:
-                return Color.GREEN;
-
-            case 3:
-                return Color.RED;
-
-            case 4:
-                return Color.CYAN;
-
-            case 5:
-                return Color.magenta;
-
-            case 6:
-                return Color.pink;
-
-        }
-        return Color.WHITE;
+        return switch (playerNumber) {
+            case 1 -> Color.BLUE;
+            case 2 -> Color.GREEN;
+            case 3 -> Color.RED;
+            case 4 -> Color.CYAN;
+            case 5 -> Color.magenta;
+            case 6 -> Color.pink;
+            default -> Color.WHITE;
+        };
     }
 
 
@@ -94,8 +77,7 @@ public class BoardGuiPanel extends JPanel
             for (int j = 0 ; j<25; j++) {
                 if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == playerNumber)
                 {
-                    int[] temp = {i,j};
-                    return temp;
+                    return new int[]{i,j};
                 }
             }
         }
@@ -107,8 +89,7 @@ public class BoardGuiPanel extends JPanel
             for (int j = 0 ; j<25; j++)
                 if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == 0)
                 {
-                    int[] temp = {i,j};
-                    return temp;
+                    return new int[]{i,j};
                 }
         return null;
     }
@@ -136,7 +117,7 @@ public class BoardGuiPanel extends JPanel
     }
     public String getMoveFromPanel()
     {
-        String temp = new String("RUCH: "+ pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1]);
+        String temp = "RUCH: " + pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1];
         pawnToMove = null;
         fieldToMove = null;
         return temp;
