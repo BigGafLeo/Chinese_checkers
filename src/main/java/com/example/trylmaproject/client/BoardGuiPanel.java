@@ -17,24 +17,34 @@ public class BoardGuiPanel extends JPanel
 
     public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS * 2;
     public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2;
-    private Field pawnToMove;
-    private Field fieldMoveTo;
+    private int[] pawnToMove;
+    private int[] fieldToMove;
     private boolean isYourTurn = false;
     Field[][] board;
-    public BoardGuiPanel(Field[][] board)
+    private int playerNumber;
+    public BoardGuiPanel(Field[][] board, int playerNumber)
     {
-        setBackground(Color.WHITE);
+        this.playerNumber = playerNumber;
         this.board = board;
+
+        pawnToMove = new int[2];
+        fieldToMove = new int[2];
+        pawnToMove[0] = 100;
+        pawnToMove[1] = 100;
+        fieldToMove[0] = 100;
+        fieldToMove[1] = 100;
+
+        setBackground(Color.WHITE);
         setPreferredSize(new Dimension(DEFAULT_BOARD_WIDTH,DEFAULT_BOARD_HEIGHT));
         addMouseListener(new MouseHandler());
         repaint();
     }
+
     public void panelRepaint(Field[][] board)
     {
         this.board = board;
         repaint();
     }
-
 
     public void paintComponent(Graphics g)
     {
@@ -55,6 +65,7 @@ public class BoardGuiPanel extends JPanel
             }
 
     }
+
     private Color colorForPlayer(int playerNumber)
     {
         switch (playerNumber)
@@ -81,13 +92,34 @@ public class BoardGuiPanel extends JPanel
         return Color.WHITE;
     }
 
-    //TODO Ustawić drugą metodę find w której upewniamy się że pole na które chce się ruszyć gracz jest puste
-    public Field find(Point2D point)
+
+    private int[] findPawn(Point2D point)
     {
         for(int i = 0 ; i<17; i++)
             for (int j = 0 ; j<25; j++)
-                if(board[i][j].getCircle().contains(point))
-                    return board[i][j];
+                if(board[i][j].getCircle().contains(point) /*&& board[i][j].getPlayerNumber() == playerNumber */)
+                {
+//                    int[] temp = {i,j};
+                    int[] temp = new int[2];
+                    temp[0] = i;
+                    temp[1] = j;
+                    return temp;
+                }
+//        return null;
+        int[] temp = new int[2];
+        temp[0] = 1;
+        temp[1] = 1;
+        return temp;
+    }
+    private int[] findEmptyField(Point2D point)
+    {
+        for(int i = 0 ; i<17; i++)
+            for (int j = 0 ; j<25; j++)
+                if(board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == 0)
+                {
+                    int[] temp = {i,j};
+                    return temp;
+                }
         return null;
     }
 
@@ -95,11 +127,23 @@ public class BoardGuiPanel extends JPanel
     {
         public void mousePressed(MouseEvent event)
         {
-            if(pawnToMove==null)
-                pawnToMove = find(event.getPoint());
-            else
-                fieldMoveTo = find(event.getPoint());
+
+            if(pawnToMove[0]==100) {
+                pawnToMove = findPawn(event.getPoint());
+            }
+            else {
+                fieldToMove = findEmptyField(event.getPoint());
+            }
+
+            if(pawnToMove != null && fieldToMove != null)
+            {
+                notify();
+            }
         }
+    }
+    public String getMoveFromPanel()
+    {
+        return new String("RUCH: "+ pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1]);
     }
 }
 
