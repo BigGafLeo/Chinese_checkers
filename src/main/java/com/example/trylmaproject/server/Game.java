@@ -270,6 +270,9 @@ public class Game implements Runnable{
                         oos.writeObject("KONIEC_GRY: " + lastWinner);
                         break;
                     }
+                    else{
+                        oos.writeObject("GRA");
+                    }
                     helper = "ZWYCIEZCA: " + lastWinner;
                     if(!Objects.equals(lastWinner, "")) oos.writeObject(helper);
                     else{
@@ -301,6 +304,7 @@ public class Game implements Runnable{
                             }
                         }
                     }
+                    else oos.writeObject("KOLEJKA: NIE");
                 }
             }
             catch(IOException exception){
