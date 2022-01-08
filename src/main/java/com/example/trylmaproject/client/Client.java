@@ -69,20 +69,47 @@ public class Client {
                     }
                 }
             }
-            board = (Field[][])ois.readObject();
             System.out.println("tak");
             queFrame.setVisible(false);
-
-            boardGuiFrame = new BoardGuiFrame(playerNumber,board);
-            boardGuiFrameCreaction();
 
 
             while (true)
             {
-                ois.readObject().equals()
-            }
-            boardGuiFrame.boardRepaint(board);
+                board = (Field[][])ois.readObject();
+                if(boardGuiFrame == null){
+                    boardGuiFrame = new BoardGuiFrame(playerNumber,board);
+                    boardGuiFrameCreaction();
+                }
+                else boardGuiFrame.boardRepaint(board);
+                line = (String)ois.readObject();
+                if(line.startsWith("KONIEC_GRY: ")){
+                    boardGuiFrame.endGame(line.substring(12));
+                    break;
+                }
+                line = (String)ois.readObject();
+                if(line.startsWith("ZWYCIEZCA: ")){
+                    boardGuiFrame.whoWinner(line.substring(11));
+                }
+                line = (String)ois.readObject();
+                if(line.equals("KOLEJKA: TAK")){
+                    boardGuiFrame.isYourTurn(true);
+                    /*
+                    synchronized (boardGuiFrame) {
+                        boardGuiFrame.wait();
+                    }
+                    */
+                    while(true){
+                        out.println(boardGuiFrame.getMove());
+                        line = (String)ois.readObject();
+                        if (line.equals("AKCEPTACJA")){
+                            boardGuiFrame.isYourTurn(false);
+                            break;
+                        }
+                    }
 
+                }
+                else boardGuiFrame.isYourTurn(false);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
