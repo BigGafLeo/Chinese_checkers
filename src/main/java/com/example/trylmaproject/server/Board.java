@@ -56,31 +56,35 @@ public class Board {
 
         if (board[startY][startX] != null && board[endY][endX] != null){
             if(board[startY][startX].getPlayerNumber() == player && board[endY][endX].getPlayerNumber() == 0){
-                if(isInEndingField(player, startX, startY) && !isInEndingField(player, endX, endY)){
-                    throw new IllegalMoveException();
-                }
-                else{
-                    int diffX = Math.abs(startX - endX);
-                    int diffY = Math.abs(startY - endY);
-                    if(diffX == 1 && diffY == 1){
-                        board[endY][endX].setPawn(board[startY][startX].getPawn());
-                        board[startY][startX].setPawn(null);
+                if(isAbleToMovePawn(board[startY][startX].getPawn())){
+                    if(isInEndingField(player, startX, startY) && !isInEndingField(player, endX, endY)){
+                        throw new IllegalMoveException();
                     }
-                    else if(diffX == 2 && diffY == 2){
-                        int middleX = (startX + endX) / 2;
-                        int middleY = (startY + endY) / 2;
-                        if(board[middleY][middleX].getPlayerNumber() != 0){
+                    else{
+                        int diffX = Math.abs(startX - endX);
+                        int diffY = Math.abs(startY - endY);
+                        if(diffX == 1 && diffY == 1){
                             board[endY][endX].setPawn(board[startY][startX].getPawn());
                             board[startY][startX].setPawn(null);
                         }
+                        else if(diffX == 2 && diffY == 2){
+                            int middleX = (startX + endX) / 2;
+                            int middleY = (startY + endY) / 2;
+                            if(board[middleY][middleX].getPlayerNumber() != 0){
+                                board[endY][endX].setPawn(board[startY][startX].getPawn());
+                                board[startY][startX].setPawn(null);
+                            }
+                            else throw new IllegalMoveException();
+                        }
                         else throw new IllegalMoveException();
                     }
-                    else throw new IllegalMoveException();
                 }
+                else throw new IllegalMoveException();
             }
             else throw new IllegalMoveException();
         }
         else throw new IllegalMoveException();
+        setMovablePawn(board[endY][endX].getPawn());
     }
 
     private boolean isInEndingField(int player, int posx, int posy){
@@ -94,6 +98,7 @@ public class Board {
     }
 
     public boolean isAbleToMovePawn(Pawn pawn){
+        if(movablePawn == null) return true;
         return movablePawn.equals(pawn);
     }
 

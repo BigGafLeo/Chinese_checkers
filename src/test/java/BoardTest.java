@@ -14,7 +14,9 @@ public class BoardTest {
             board.doMove(1,15,13,16,12);
             assertEquals(1,board.getBoard()[12][16].getPlayerNumber());
             assertEquals(0,board.getBoard()[13][15].getPlayerNumber());
+            board.deleteMovablePawn();
             board.doMove(1,14,14,15,13);
+            board.deleteMovablePawn();
             assertEquals(1,board.getBoard()[13][15].getPlayerNumber());
             board.doMove(1,15,13,17,11);
             assertEquals(1,board.getBoard()[11][17].getPlayerNumber());
@@ -33,18 +35,27 @@ public class BoardTest {
             assertThrows(IllegalMoveException.class,
                     () -> {board.doMove(1,15,13,14,13);}
             );
+            board.deleteMovablePawn();
             assertThrows(IllegalMoveException.class,
                     () -> {board.doMove(1,15,13,13,13);}
             );
+            board.deleteMovablePawn();
             assertThrows(IllegalMoveException.class,
                     () -> {board.doMove(1,15,13,17,11);}
             );
+            board.deleteMovablePawn();
             assertThrows(IllegalMoveException.class,
                     () -> {board.doMove(1,15,13,15,11);}
+            );
+            board.doMove(1,15,13,16,12);
+            assertThrows(IllegalMoveException.class,
+                    () -> {board.doMove(1,14,14,15,13);}
             );
 
         } catch (IllegalNumberOfPlayers e) {
             e.printStackTrace();
+        } catch (IllegalMoveException exception) {
+            exception.printStackTrace();
         }
     }
 
