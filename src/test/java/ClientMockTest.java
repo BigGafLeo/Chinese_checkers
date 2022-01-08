@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ClientMockTest{
 
@@ -52,6 +53,13 @@ public class ClientMockTest{
         }
         threads.execute(game);
         threads.execute(mock1);
+        synchronized (this){
+            try {
+                this.wait(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         threads.execute(mock2);
 
         synchronized (this){
@@ -63,6 +71,7 @@ public class ClientMockTest{
         }
         assertEquals("Alice", game.getName(0));
         assertEquals("Bob", game.getName(1));
+        assertTrue(mock1.moveAccepted);
     }
 
 

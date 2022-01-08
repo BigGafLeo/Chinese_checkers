@@ -42,7 +42,7 @@ public class Game implements Runnable{
     /**
      * Zmienna wskazująca na gracza o danym numerze, który ma teraz ruch
      */
-    private int whoseTurn;
+    private int whoseTurn = 0;
 
     /**
      * Ile graczy jeszcze nie wygrało
@@ -93,7 +93,7 @@ public class Game implements Runnable{
      * Nie może on być ani nullem, ani nie może być już zwyciezcą
      */
     void setPlayerTurn(){
-        if(players[whoseTurn] != null && !players[whoseTurn].isWinner()){
+        if(players[whoseTurn] != null && !players[whoseTurn].isWinner() && players[whoseTurn].IS_ACTIVE){
             players[whoseTurn].setTurn();
         }
         else{
@@ -259,7 +259,6 @@ public class Game implements Runnable{
                     catch (IllegalNumberOfPlayers i){
                         i.printStackTrace();
                     }
-                    whoseTurn = (int)(Math.random() * playerNumber + 1);
                     synchronized(Game.this){
                         Game.this.notify();
                     }
@@ -285,7 +284,9 @@ public class Game implements Runnable{
                         oos.writeObject("KOLEJKA: TAK");
                         synchronized (board) {
                             while(true){
+                                System.out.println("Doszliśmy aż tutaj xd " + playerNumber);
                                 String[] commandArray = in.nextLine().split(" ");
+                                System.out.println("ale tutaj już nie dx " + playerNumber);
                                 if (Objects.equals(commandArray[0], "POMIN")) break;
                                 else if (Objects.equals(commandArray[0], "RUCH:")) {
                                     //RUCH: [POZYCJAX_POCZ] [POZYCJAY_POCZ] [POZYCJAX_KONC], [POZYCJAY_KONC]
@@ -304,7 +305,9 @@ public class Game implements Runnable{
                                 }
                             }
                             board.deleteMovablePawn();
-                            newTurn();
+                            synchronized(Game.this){
+                                Game.this.notify();
+                            }
                         }
                     }
                     else oos.writeObject("KOLEJKA: NIE");

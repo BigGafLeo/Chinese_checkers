@@ -82,10 +82,24 @@ public class QueFrame extends JFrame {
     }
 
     public boolean isNameReadyToSend() {
+        synchronized (this){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return nameReadyToSend;
     }
 
     public boolean isReadyToPlay() {
+        synchronized (this) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return readyToPlay;
     }
 }

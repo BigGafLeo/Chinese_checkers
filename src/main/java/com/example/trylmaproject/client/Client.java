@@ -37,9 +37,6 @@ public class Client {
             do{}
             while(!((String)ois.readObject()).startsWith("IMIE:"));
             while(true){
-                synchronized (queFrame){
-                    queFrame.wait();
-                }
                 if(queFrame.isNameReadyToSend()){
                     out.println(queFrame.getNameToServer());
                     break;
@@ -52,9 +49,6 @@ public class Client {
 
             if(playerNumber == 1){
                 while(true) {
-                    synchronized (queFrame) {
-                        queFrame.wait();
-                    }
                     if(queFrame.isReadyToPlay()){
                         out.println("START");
                         if (ois.readObject().equals("JESZCZE_RAZ")) {
@@ -105,8 +99,6 @@ public class Client {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

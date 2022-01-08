@@ -1,11 +1,11 @@
+import com.example.trylmaproject.server.Field;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
-import javax.swing.*;
 
 public class ClientMock implements Runnable{
 
@@ -17,6 +17,8 @@ public class ClientMock implements Runnable{
     ObjectInputStream ois;
     String name, test;
     public int numer;
+    public Field[][] board;
+    public boolean moveAccepted = false;
 
     ClientMock(String name){
         this.name = name;
@@ -25,39 +27,59 @@ public class ClientMock implements Runnable{
     @Override
     public void run() {
         try {
-            socket = new Socket("localhost",59090);
-            scanner = new Scanner(System.in);
-            reader = new PrintWriter(System.out);
-            in = new Scanner(socket.getInputStream(), StandardCharsets.UTF_8);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            //ois = new ObjectInputStream(socket.getInputStream());
-            while(true){
-                synchronized (this){
-                    try {
-                        this.wait(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+            //dodaj dwóch graczy
+            socket = new Socket("localhost", 59090);
+            out = new PrintWriter(socket.getOutputStream(),true);
+            ois = new ObjectInputStream(socket.getInputStream());
+            var line = (String)ois.readObject();
+            if(line.startsWith("NUMER: "))
+                numer = Integer.parseInt(line.substring(7));
+            do{}
+            while(!((String)ois.readObject()).startsWith("IMIE:"));
+            out.println(name);
 
-                test = in.next();
-                test = in.next();
-                if(test.equals("IMIE:")) {
-                    do{
-                        out.println(name);
+            while(true){
+                if(numer == 1){
+                    synchronized (this){
+                        wait(1000);
                     }
-                    while(!in.nextLine().equals("IMIĘ_ZAAKCEPTOWANE"));
+                    out.println("START");
+                    if (ois.readObject().equals("JESZCZE_RAZ")) {}
+                    else break;
                 }
-                while(true){
-                    test=in.nextLine();
-                    String[] arraytest = test.split(" ");
-                    if(arraytest[0].equals("NUMER:")){
-                        numer = Integer.parseInt(arraytest[1]);
-                        break;
+            }
+
+            System.out.println("tak");
+
+
+            while (true)
+            {
+                board = (Field[][])ois.readObject();
+                line = (String)ois.readObject();
+                if(line.startsWith("KONIEC_GRY: ")){
+                    break;
+                }
+                line = (String)ois.readObject();
+                if(line.startsWith("ZWYCIEZCA: ")){
+                }
+                line = (String)ois.readObject();
+                if(line.equals("KOLEJKA: TAK")){
+                    if(numer == 1){
+                        out.println("MOVE: 15 13 16 12");
+                        System.out.println("MOVE: 15 13 16 12");
+                        if(((String)ois.readObject()).equals("AKCEPTACJA")){
+                            moveAccepted = true;
+                            break;
+                        }
                     }
+                    if(numer == 2) out.println("POMIN");
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
