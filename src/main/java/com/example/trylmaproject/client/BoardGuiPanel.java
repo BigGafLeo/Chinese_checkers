@@ -99,19 +99,12 @@ public class BoardGuiPanel extends JPanel
             for (int j = 0 ; j<25; j++) {
                 if(board[i][j] != null && board[i][j].getCircle().contains(point) /*&& board[i][j].getPlayerNumber() == playerNumber */)
                 {
-                    int[] temp = new int[2];
-                    temp[0] = i;
-                    temp[1] = j;
+                    int[] temp = {i,j};
                     return temp;
                 }
             }
         }
-
-//        return null;
-        int[] temp = new int[2];
-        temp[0] = 1;
-        temp[1] = 1;
-        return temp;
+        return null;
     }
     private int[] findEmptyField(Point2D point)
     {
@@ -145,7 +138,10 @@ public class BoardGuiPanel extends JPanel
     }
     public String getMoveFromPanel()
     {
-        return new String("RUCH: "+ pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1]);
+        String temp = new String("RUCH: "+ pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1]);
+        pawnToMove = null;
+        fieldToMove = null;
+        return temp
     }
 }
 
