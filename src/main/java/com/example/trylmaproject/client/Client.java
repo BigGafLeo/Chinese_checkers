@@ -76,6 +76,14 @@ public class Client {
             boardGuiFrame = new BoardGuiFrame(playerNumber,board);
             boardGuiFrameCreaction();
 
+
+            while (true)
+            {
+                ois.readObject().equals()
+            }
+            boardGuiFrame.boardRepaint(board);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -7,12 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class BoardGuiFrame extends JFrame
 {
-	private JPanel panel;
+	private BoardGuiPanel panel;
 	private int playerNumber;
 	private JButton skipButton;
+	private String[] scoreTable;
 
 	public BoardGuiFrame(int playerNumber, Field[][] board)
 	{
@@ -28,6 +31,25 @@ public class BoardGuiFrame extends JFrame
 		this.add(skipButton,BorderLayout.SOUTH);
 		this.playerNumber = playerNumber;
 		pack();
+		scoreTable = new String[6];
+	}
+
+	public void boardRepaint(Field[][] board)
+	{
+		panel.panelRepaint(board);
+	}
+	//TODO Dodać implementacje tych metod
+	public void whoWinner(String winner)
+	{
+
+	}
+	public void isYourTurn(boolean turn)
+	{
+
+	}
+	public void endGame(String losser)
+	{
+
 	}
 }
 //public class BoardGuiFrame extends JFrame

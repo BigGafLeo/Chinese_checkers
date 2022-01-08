@@ -19,6 +19,7 @@ public class BoardGuiPanel extends JPanel
     public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2;
     private Field pawnToMove;
     private Field fieldMoveTo;
+    private boolean isYourTurn = false;
     Field[][] board;
     public BoardGuiPanel(Field[][] board)
     {
@@ -28,15 +29,12 @@ public class BoardGuiPanel extends JPanel
         addMouseListener(new MouseHandler());
         repaint();
     }
-    //TODO Ustawić drugą metodę find w której upewniamy się że pole na które chce się ruszyć gracz jest puste
-    public Field find(Point2D point)
+    public void panelRepaint(Field[][] board)
     {
-        for(int i = 0 ; i<17; i++)
-            for (int j = 0 ; j<25; j++)
-                if(board[i][j].getCircle().contains(point))
-                    return board[i][j];
-        return null;
+        this.board = board;
+        repaint();
     }
+
 
     public void paintComponent(Graphics g)
     {
@@ -81,6 +79,16 @@ public class BoardGuiPanel extends JPanel
 
         }
         return Color.WHITE;
+    }
+
+    //TODO Ustawić drugą metodę find w której upewniamy się że pole na które chce się ruszyć gracz jest puste
+    public Field find(Point2D point)
+    {
+        for(int i = 0 ; i<17; i++)
+            for (int j = 0 ; j<25; j++)
+                if(board[i][j].getCircle().contains(point))
+                    return board[i][j];
+        return null;
     }
 
     private class MouseHandler extends MouseAdapter
