@@ -22,6 +22,8 @@ public class BoardGuiFrame extends JFrame
 	public BoardGuiFrame(int playerNumber, Field[][] board)
 	{
 		this.setLayout(new BorderLayout());
+		this.playerNumber = playerNumber;
+
 		panel = new BoardGuiPanel(board, playerNumber);
 		this.add(panel,BorderLayout.CENTER);
 
