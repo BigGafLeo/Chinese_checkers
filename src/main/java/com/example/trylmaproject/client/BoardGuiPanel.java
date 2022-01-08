@@ -39,6 +39,7 @@ public class BoardGuiPanel extends JPanel
 
     public void paintComponent(Graphics g)
     {
+        super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         for(int i = 0; i<17;i++)
             for(int j = 0; j<25;j++)
@@ -119,7 +120,7 @@ public class BoardGuiPanel extends JPanel
     }
     public String getMoveFromPanel()
     {
-        String temp = "RUCH: " + pawnToMove[0] + " " + pawnToMove[1] + " " + fieldToMove[0] + " " + fieldToMove[1];
+        String temp = "RUCH: " + pawnToMove[1] + " " + pawnToMove[0] + " " + fieldToMove[1] + " " + fieldToMove[0];
         pawnToMove = null;
         fieldToMove = null;
         return temp;

@@ -81,9 +81,7 @@ public class BoardGuiFrame extends JFrame
 				return panel.getMoveFromPanel();
 			}
 		}
-
 	}
-
 }
 
 
