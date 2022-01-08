@@ -79,6 +79,16 @@ public class Client {
                 if(line.equals("KOLEJKA: TAK")){
                     boardGuiFrame.setTurn(true);
                     while(true){
+
+//                        synchronized (boardGuiFrame){
+//                            try {
+//                                boardGuiFrame.wait();
+//                                line = boardGuiFrame.getMessage();
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+
                         line = boardGuiFrame.getMessage();
                         if(line.equals("BREAK")){
                             boardGuiFrame.setTurn(false);
@@ -102,14 +112,14 @@ public class Client {
     private void queFrameCreaction()
     {
         queFrame.setDefaultCloseOperation(3);
-        queFrame.setTitle("Kolejka");
+        queFrame.setTitle("Kolejka gracz: "+ playerNumber);
         queFrame.setVisible(true);
         queFrame.setLocationRelativeTo((Component) null);
     }
     private void boardGuiFrameCreaction()
     {
         boardGuiFrame.setDefaultCloseOperation(3);
-        boardGuiFrame.setTitle("Warcaby");
+        boardGuiFrame.setTitle("Warcaby gracz: " + playerNumber);
         boardGuiFrame.setVisible(true);
         boardGuiFrame.setLocationRelativeTo((Component) null);
     }
