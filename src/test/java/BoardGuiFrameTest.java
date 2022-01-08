@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.awt.*;
 
 public class BoardGuiFrameTest {
+
     @Test
     public void testGUI(){
         Board board = null;
