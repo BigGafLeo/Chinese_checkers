@@ -15,6 +15,12 @@ public class Board {
     private final int numberOfPlayers;
 
     /**
+     * Pole, które wskazuje na blokadę wykonywania ruchów - można jedynie tym pionkiem się ruszać,
+     * jeśli nie jest nullem
+     */
+    private Pawn movablePawn = null;
+
+    /**
      * Dwuwymiarowa tablica do gry o wymiarach 25 na 17, gdzie pola są rozstawione po
      * przekątnych.
      */
@@ -34,6 +40,7 @@ public class Board {
         return board;
     }
 
+
     /**
      * Metoda pozwalająca na wykonanie ruchu na planszy
      *
@@ -46,10 +53,25 @@ public class Board {
      */
     public void doMove(int player, int startX, int startY, int endX, int endY) throws IllegalMoveException {
         //TODO jeszcze bez sprawdzania poprawności ruchu
+        if(board[startY][startX].getPlayerNumber() == player){
+
+        }
+        else throw new IllegalMoveException();
         board[startY][startX].setPlayerNumber(0);
         board[endY][endX].setPlayerNumber(player);
     }
 
+    public boolean isAbleToMovePawn(Pawn pawn){
+        return movablePawn.equals(pawn);
+    }
+
+    public void setMovablePawn(Pawn pawn){
+        movablePawn = pawn;
+    }
+
+    public void deleteMovablePawn(){
+        movablePawn = null;
+    }
     /**
      * Metoda sprawdzająca, czy gracz o podanym numerze już wygrał
      * @param player - id gracza
