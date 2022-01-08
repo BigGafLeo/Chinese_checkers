@@ -35,7 +35,8 @@ public class Game implements Runnable{
      * Licznik graczy, którzy dołączyli do gry
      */
     private volatile int playerNumber = 0;
-    private boolean TURN_STARTED = false;
+    private boolean GAME_STARTED = false;
+
     private boolean GAME_ENDED = false;
 
     /**
@@ -68,7 +69,7 @@ public class Game implements Runnable{
                     e.printStackTrace();
                 }
             }
-            if(TURN_STARTED){
+            if(GAME_STARTED){
                 newTurn();
             }
         }
@@ -167,11 +168,11 @@ public class Game implements Runnable{
         @Override
         public void run() {
             ExecutorService threads = Executors.newFixedThreadPool(6);
-            while(playerNumber<6 && !TURN_STARTED){
+            while(playerNumber<6 && !GAME_STARTED){
                 //Czekanie na graczy i dodawanie ich do tablicy
                 try {
                     threads.execute(players[playerNumber] = new PlayerThread(serverSocket.accept(), ++playerNumber));
-                    if(TURN_STARTED) playerNumber--;
+                    if(GAME_STARTED) playerNumber--;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -222,7 +223,7 @@ public class Game implements Runnable{
 
         @Override
         public void run() {
-            if(TURN_STARTED) {
+            if(GAME_STARTED) {
                 IS_ACTIVE = false;
                 return;
             }
@@ -252,7 +253,7 @@ public class Game implements Runnable{
                         }
                     }
                     System.out.println("START2");
-                    TURN_STARTED = true;
+                    GAME_STARTED = true;
 
                     try{board = new Board(playerNumber);}
                     catch (IllegalNumberOfPlayers i){
@@ -282,12 +283,12 @@ public class Game implements Runnable{
 
                     if(IS_YOUR_TURN){
                         oos.writeObject("KOLEJKA: TAK");
-                        while(true){
-
-                            String[] commandArray = in.nextLine().split(" ");
-                            synchronized (board) {
+                        synchronized (board) {
+                            while(true){
+                                String[] commandArray = in.nextLine().split(" ");
                                 if (Objects.equals(commandArray[0], "POMIN")) break;
                                 else if (Objects.equals(commandArray[0], "RUCH:")) {
+                                    //RUCH: [POZYCJAX_POCZ] [POZYCJAY_POCZ] [POZYCJAX_KONC], [POZYCJAY_KONC]
                                     try {
                                         board.doMove(number, Integer.parseInt(commandArray[1]), Integer.parseInt(commandArray[2]), Integer.parseInt(commandArray[3]), Integer.parseInt(commandArray[4]));
                                     } catch (IllegalMoveException exception) {
@@ -296,12 +297,14 @@ public class Game implements Runnable{
                                     oos.writeObject("AKCEPTACJA");
                                     if(isWinner()){
                                         announceLastWinner(name);
+                                        break;
                                     }
-                                    newTurn();
                                 } else {
                                     oos.writeObject("POWTÓRZ");
                                 }
                             }
+                            board.deleteMovablePawn();
+                            newTurn();
                         }
                     }
                     else oos.writeObject("KOLEJKA: NIE");

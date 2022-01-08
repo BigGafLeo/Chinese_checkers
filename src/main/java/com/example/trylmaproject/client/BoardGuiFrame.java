@@ -16,6 +16,8 @@ public class BoardGuiFrame extends JFrame
 	private int playerNumber;
 	private JButton skipButton;
 	private String[] scoreTable;
+	private boolean breakSignal = false;
+	private boolean turn = false;
 
 	public BoardGuiFrame(int playerNumber, Field[][] board)
 	{
@@ -26,7 +28,14 @@ public class BoardGuiFrame extends JFrame
 		skipButton = new JButton("Pomiń ture");
 		skipButton.addActionListener(event ->
 		{
-			//TODO Dodać obsługe klawisza
+			if(turn){
+				breakSignal = true;
+				synchronized (panel){
+					panel.notify();
+				}
+			}
+			else JOptionPane.showConfirmDialog(null,"To nie twoja kolejka!", "ERROR", JOptionPane.ERROR_MESSAGE);
+
 		});
 		this.add(skipButton,BorderLayout.SOUTH);
 		this.playerNumber = playerNumber;
@@ -43,16 +52,16 @@ public class BoardGuiFrame extends JFrame
 	{
 
 	}
-	public void isYourTurn(boolean turn)
+	public void setTurn(boolean turn)
 	{
-
+		this.turn = turn;
 	}
 	public void endGame(String losser)
 	{
 
 	}
 
-	public String getMove() {
+	public String getMessage() {
 		synchronized (panel){
 			try {
 				panel.wait();
@@ -61,8 +70,16 @@ public class BoardGuiFrame extends JFrame
 				e.printStackTrace();
 			}
 		}
-		return null;
+		if(breakSignal) {
+			breakSignal = false;
+			return "BREAK";
+		}
+		else {
+			//TODO wysyłanie komunikatu z ruchem
+			return null;
+		}
 	}
+
 }
 
 

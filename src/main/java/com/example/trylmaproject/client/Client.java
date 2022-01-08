@@ -1,14 +1,11 @@
 package com.example.trylmaproject.client;
 
 import com.example.trylmaproject.server.Field;
-import com.example.trylmaproject.server.Game;
 
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Client {
     String serverAddress;
@@ -30,11 +27,8 @@ public class Client {
         try
         {
             var socket = new Socket(serverAddress,59090);
-            //in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream(),true);
-            //oos = new ObjectOutputStream(socket.getOutputStream());
             ois = new ObjectInputStream(socket.getInputStream());
-            //BufferedReader r = new BufferedReader(new InputStreamReader(ois));
             var line = (String)ois.readObject();
             if(line.startsWith("NUMER: "))
                 playerNumber = Integer.parseInt(line.substring(7));
@@ -92,23 +86,22 @@ public class Client {
                 }
                 line = (String)ois.readObject();
                 if(line.equals("KOLEJKA: TAK")){
-                    boardGuiFrame.isYourTurn(true);
-                    /*
-                    synchronized (boardGuiFrame) {
-                        boardGuiFrame.wait();
-                    }
-                    */
+                    boardGuiFrame.setTurn(true);
                     while(true){
-                        out.println(boardGuiFrame.getMove());
-                        line = (String)ois.readObject();
-                        if (line.equals("AKCEPTACJA")){
-                            boardGuiFrame.isYourTurn(false);
+                        line = boardGuiFrame.getMessage();
+                        if(line.equals("BREAK")){
+                            boardGuiFrame.setTurn(false);
+                            out.println("POMIN");
                             break;
                         }
+                        out.println(boardGuiFrame.getMessage());
+                        line = (String)ois.readObject();
+                        if (line.equals("AKCEPTACJA")){
+                            line = (String)ois.readObject();
+                        }
                     }
-
                 }
-                else boardGuiFrame.isYourTurn(false);
+                else boardGuiFrame.setTurn(false);
             }
 
         } catch (IOException e) {
