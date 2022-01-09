@@ -162,7 +162,7 @@ public class BoardGuiPanel extends JPanel
 //                        board[fieldToMove[0]][fieldToMove[1]].setPlayerNumber(playerNumber);
 //                    }
                     motionCircle = null;
-//                    repaint();
+                    repaint();
                     synchronized (this) {
                         notifyAll();
                     }

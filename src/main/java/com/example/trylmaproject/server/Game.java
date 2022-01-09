@@ -24,7 +24,7 @@ public class Game implements Runnable{
     /**
      * Tablica wątków obsługujących poszczególnych graczy
      */
-    private final PlayerThread[] players = new PlayerThread[6];
+    private final PlayerThread[] players = new PlayerThread[Board.MAX_PLAYERS];
 
     /**
      * Model do gry w chińskie warcaby (patrz: MVC)
@@ -187,6 +187,19 @@ public class Game implements Runnable{
         return null;
     }
 
+    public Player[] getAllPlayers(){
+        Player[] playerList = new Player[6];
+        for(int i = 0; i < Board.MAX_PLAYERS; i++){
+            if(players[i] != null && players[i].getPlayer() != null){
+                playerList[i] = players[i].getPlayer();
+            }
+            else{
+                playerList[i] = null;
+            }
+        }
+        return playerList;
+    }
+
 
     /**
      * Obliczanie, ile jeszcze graczy czeka na koniec gry
@@ -221,7 +234,7 @@ public class Game implements Runnable{
         @Override
         public void run() {
             ExecutorService threads = Executors.newFixedThreadPool(6);
-            while(playerNumber<6 && !GAME_STARTED){
+            while(playerNumber< board.MAX_PLAYERS && !GAME_STARTED){
                 //Czekanie na graczy i dodawanie ich do tablicy
                 try {
                     threads.execute(players[playerNumber] = new PlayerThread(serverSocket.accept(), ++playerNumber));
@@ -238,12 +251,11 @@ public class Game implements Runnable{
     class PlayerThread implements Runnable{
 
         private final Socket socket;
-        private final int number;
-        private String name;
         private String lastWinner;
+        public boolean IS_ACTIVE = true;
         private boolean IS_YOUR_TURN = false;
-        private boolean IS_ACTIVE = true;
         private boolean IS_WAITING = false;
+        private Player player;
 
         //-------------------------------------------------------------------------------------------//
 
@@ -254,7 +266,7 @@ public class Game implements Runnable{
          */
         PlayerThread(Socket socket, int number){
             this.socket = socket;
-            this.number = number;
+            player.number = number;
         }
 
         //-------------------------------------------------------------------------------------------//
@@ -268,14 +280,18 @@ public class Game implements Runnable{
         }
 
         public String getName(){
-            return name;
+            return player.name;
+        }
+
+        public Player getPlayer(){
+            return player;
         }
 
         /**
          *
          * @return czy dany gracz już jest zwycięzcą
          */
-        public boolean isWinner(){return board.isWinner(number);}
+        public boolean isWinner(){return board.isWinner(player.number);}
 
 
         /**
@@ -310,19 +326,19 @@ public class Game implements Runnable{
 
         public void prepareForGame(Scanner in, ObjectOutputStream oos) throws IOException{
             //Wyślij numer gracza klientowi
-            String line = "NUMER: " + number;
+            String line = "NUMER: " + player.number;
             oos.writeObject(line);
 
             //TODO obsługa niepopranych imion w kliencie
             //Pobierz imię od gracza
             do {
                 oos.writeObject("IMIE:");
-                name = in.nextLine();
-                System.out.println(name);
-            } while (name.isBlank());
+                player.name = in.nextLine();
+                System.out.println(player.name);
+            } while (player.name.isBlank());
 
             //Czekaj, aż gracz numer jeden da poprawny sygnał do startu
-            if(number == 1){
+            if(player.number == 1){
                 while(true){
                     System.out.println("nastart");
                     line = in.nextLine();
@@ -357,6 +373,7 @@ public class Game implements Runnable{
                 //Wyślij klientowi tablicę Field[][] do wyrysowania i wyczyść pamięć
                 //podręczną
                 oos.writeObject(board.getBoard());
+                oos.writeObject(getAllPlayers());
                 oos.reset();
                 if(GAME_ENDED){
                     oos.writeObject("KONIEC_GRY: " + lastWinner);
@@ -382,7 +399,7 @@ public class Game implements Runnable{
                             else if (Objects.equals(commandArray[0], "RUCH:")) {
                                 //RUCH: [POZYCJAX_POCZ] [POZYCJAY_POCZ] [POZYCJAX_KONC], [POZYCJAY_KONC]
                                 try {
-                                    board.doMove(number, commandArray);
+                                    board.doMove(player.number, commandArray);
                                     oos.writeObject("AKCEPTACJA");
                                     oos.writeObject(board.getBoard());
                                     oos.reset();
@@ -392,7 +409,8 @@ public class Game implements Runnable{
                                     oos.reset();
                                 }
                                 if(isWinner()){
-                                    announceLastWinner(name);
+                                    announceLastWinner(player.name);
+                                    player.IS_WINNER = true;
                                     return true;
                                 }
                             } else {
@@ -425,6 +443,7 @@ public class Game implements Runnable{
                 return;
             }
             try{
+                player = new Player();
                 Scanner in = new Scanner(socket.getInputStream());
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 prepareForGame(in, oos);

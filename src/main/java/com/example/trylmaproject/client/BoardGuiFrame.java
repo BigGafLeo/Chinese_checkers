@@ -1,6 +1,7 @@
 package com.example.trylmaproject.client;
 
 import com.example.trylmaproject.server.Field;
+import com.example.trylmaproject.server.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,7 @@ public class BoardGuiFrame extends JFrame
 	private boolean breakSignal = false;
 	private boolean turn = false;
 	private int homManyPlayers;
+	private Player[] players;
 
 	public BoardGuiFrame(int playerNumber, Field[][] board)
 	{
@@ -46,6 +48,8 @@ public class BoardGuiFrame extends JFrame
 		setLocationRelativeTo(null);
 	}
 
+
+
 	public void boardRepaint(Field[][] board)
 	{
 		panel.panelRepaint(board);
@@ -61,6 +65,11 @@ public class BoardGuiFrame extends JFrame
 		this.turn = turn;
 		panel.setIsYourTurn(turn);
 	}
+
+	public void setPlayerList(Player[] players){
+		this.players = players;
+	}
+
 	public void endGame(String losser)
 	{
 		scoreTable[homManyPlayers] = losser;

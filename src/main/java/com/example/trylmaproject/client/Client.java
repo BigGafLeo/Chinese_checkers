@@ -1,8 +1,8 @@
 package com.example.trylmaproject.client;
 
 import com.example.trylmaproject.server.Field;
+import com.example.trylmaproject.server.Player;
 
-import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -57,12 +57,14 @@ public class Client {
 
 
             while (true) {
+
                 board = (Field[][])ois.readObject();
                 if(boardGuiFrame == null){
                     queFrame.setVisible(false);
                     boardGuiFrame = new BoardGuiFrame(playerNumber,board);
                 }
                 else boardGuiFrame.boardRepaint(board);
+                boardGuiFrame.setPlayerList((Player[])ois.readObject());
                 line = (String)ois.readObject();
                 if(line.startsWith("KONIEC_GRY: ")){
                     boardGuiFrame.endGame(line.substring(12));

@@ -14,7 +14,7 @@ public class Board {
      * Wymiary schematycznej tablicy do gry
      */
     public final int W = 25, H = 17;
-    public final int MAX_PLAYERS = 6, STARTING_POINTS = 10;
+    public static final int MAX_PLAYERS = 6, STARTING_POINTS = 10;
     public final int[] DIMENSION = {12, 11, 10, 9, 0, 1, 2, 3, 4, 3, 2, 1, 0, 9, 10, 11, 12};
 
     /**
