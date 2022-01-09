@@ -13,7 +13,7 @@ public class BoardGuiFrameTest {
     public void testGUI(){
         Board board = null;
         try {
-            board = new Board(2);
+            board = new Board(6);
         } catch (IllegalNumberOfPlayers e) {
             e.printStackTrace();
         }

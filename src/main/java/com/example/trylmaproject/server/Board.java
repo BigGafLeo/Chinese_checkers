@@ -81,7 +81,7 @@ public class Board {
                 else{
                     int diffX = Math.abs(startX - endX);
                     int diffY = Math.abs(startY - endY);
-                    if(diffX == 1 && diffY == 1 && movablePawn == null){
+                    if((diffX == 1 && diffY == 1 && movablePawn == null) || (diffX == 2 && diffY == 0 && movablePawn == null)){
                         board[endY][endX].setPawn(board[startY][startX].getPawn());
                         board[startY][startX].setPawn(null);
                         isAbleToDoSecondMove = false;
