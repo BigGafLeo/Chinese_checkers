@@ -3,8 +3,7 @@ import com.example.trylmaproject.exceptions.IllegalNumberOfPlayers;
 import com.example.trylmaproject.server.Board;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
     @Test
@@ -14,14 +13,19 @@ public class BoardTest {
             board.doMove(1,15,13,16,12);
             assertEquals(1,board.getBoard()[12][16].getPlayerNumber());
             assertEquals(0,board.getBoard()[13][15].getPlayerNumber());
-            board.resetMovablePawn();
+            board.resetMoveablePawn();
             board.doMove(1,14,14,15,13);
-            board.resetMovablePawn();
+            board.resetMoveablePawn();
             assertEquals(1,board.getBoard()[13][15].getPlayerNumber());
             board.doMove(1,15,13,17,11);
             assertEquals(1,board.getBoard()[11][17].getPlayerNumber());
+            board.resetMoveablePawn();
+            board.doMove(1,13,13,14,12);
+            board.resetMoveablePawn();
+            board.doMove(1,16,12,12,12);
         } catch (IllegalNumberOfPlayers | IllegalMoveException e) {
             e.printStackTrace();
+            fail();
         }
     }
 
@@ -33,15 +37,15 @@ public class BoardTest {
             assertThrows(IllegalMoveException.class,
                     () -> board.doMove(1,15,13,14,13)
             );
-            board.resetMovablePawn();
+            board.resetMoveablePawn();
             assertThrows(IllegalMoveException.class,
                     () -> board.doMove(1,15,13,13,13)
             );
-            board.resetMovablePawn();
+            board.resetMoveablePawn();
             assertThrows(IllegalMoveException.class,
                     () -> board.doMove(1,15,13,17,11)
             );
-            board.resetMovablePawn();
+            board.resetMoveablePawn();
             assertThrows(IllegalMoveException.class,
                     () -> board.doMove(1,15,13,15,11)
             );
