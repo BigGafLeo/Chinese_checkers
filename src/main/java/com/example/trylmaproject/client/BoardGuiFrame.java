@@ -40,6 +40,10 @@ public class BoardGuiFrame extends JFrame
 		this.playerNumber = playerNumber;
 		pack();
 		scoreTable = new String[6];
+		setDefaultCloseOperation(3);
+		setTitle("Warcaby gracz: " + playerNumber);
+		setVisible(true);
+		setLocationRelativeTo(null);
 	}
 
 	public void boardRepaint(Field[][] board)
