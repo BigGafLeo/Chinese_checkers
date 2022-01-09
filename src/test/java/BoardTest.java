@@ -14,16 +14,14 @@ public class BoardTest {
             board.doMove(1,15,13,16,12);
             assertEquals(1,board.getBoard()[12][16].getPlayerNumber());
             assertEquals(0,board.getBoard()[13][15].getPlayerNumber());
-            board.deleteMovablePawn();
+            board.resetMovablePawn();
             board.doMove(1,14,14,15,13);
-            board.deleteMovablePawn();
+            board.resetMovablePawn();
             assertEquals(1,board.getBoard()[13][15].getPlayerNumber());
             board.doMove(1,15,13,17,11);
             assertEquals(1,board.getBoard()[11][17].getPlayerNumber());
-        } catch (IllegalNumberOfPlayers e) {
+        } catch (IllegalNumberOfPlayers | IllegalMoveException e) {
             e.printStackTrace();
-        } catch (IllegalMoveException exception) {
-            exception.printStackTrace();
         }
     }
 
@@ -33,29 +31,27 @@ public class BoardTest {
             //Test move to null
             Board board = new Board(2);
             assertThrows(IllegalMoveException.class,
-                    () -> {board.doMove(1,15,13,14,13);}
+                    () -> board.doMove(1,15,13,14,13)
             );
-            board.deleteMovablePawn();
+            board.resetMovablePawn();
             assertThrows(IllegalMoveException.class,
-                    () -> {board.doMove(1,15,13,13,13);}
+                    () -> board.doMove(1,15,13,13,13)
             );
-            board.deleteMovablePawn();
+            board.resetMovablePawn();
             assertThrows(IllegalMoveException.class,
-                    () -> {board.doMove(1,15,13,17,11);}
+                    () -> board.doMove(1,15,13,17,11)
             );
-            board.deleteMovablePawn();
+            board.resetMovablePawn();
             assertThrows(IllegalMoveException.class,
-                    () -> {board.doMove(1,15,13,15,11);}
+                    () -> board.doMove(1,15,13,15,11)
             );
             board.doMove(1,15,13,16,12);
             assertThrows(IllegalMoveException.class,
-                    () -> {board.doMove(1,14,14,15,13);}
+                    () -> board.doMove(1,14,14,15,13)
             );
 
-        } catch (IllegalNumberOfPlayers e) {
+        } catch (IllegalNumberOfPlayers | IllegalMoveException e) {
             e.printStackTrace();
-        } catch (IllegalMoveException exception) {
-            exception.printStackTrace();
         }
     }
 
