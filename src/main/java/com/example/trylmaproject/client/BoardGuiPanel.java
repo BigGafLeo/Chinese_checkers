@@ -6,7 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 public class BoardGuiPanel extends JPanel
 {
@@ -19,6 +23,7 @@ public class BoardGuiPanel extends JPanel
     Field[][] board;
     private int playerNumber;
     public boolean moveSignal;
+    public Ellipse2D motionCircle;
 
     public BoardGuiPanel(Field[][] board, int playerNumber)
     {
@@ -28,6 +33,7 @@ public class BoardGuiPanel extends JPanel
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(DEFAULT_BOARD_WIDTH,DEFAULT_BOARD_HEIGHT));
         addMouseListener(new MouseHandler());
+        addMouseMotionListener(new MouseMotionHandler());
         repaint();
     }
 
@@ -55,7 +61,13 @@ public class BoardGuiPanel extends JPanel
                     }
                 }
             }
-
+        if(motionCircle != null)
+        {
+            g2D.setPaint(colorForPlayer(playerNumber));
+            g2D.draw(motionCircle);
+            g2D.fill(motionCircle);
+            g2D.setPaint(Color.BLACK);
+        }
     }
 
     private Color colorForPlayer(int playerNumber)
@@ -87,6 +99,18 @@ public class BoardGuiPanel extends JPanel
         }
         return null;
     }
+    private int[] findOtherPlayerPawn(Point2D point)
+    {
+        for(int i = 0 ; i<17; i++) {
+            for (int j = 0 ; j<25; j++) {
+                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() != playerNumber && board[i][j].getPlayerNumber() != 0)
+                {
+                    return new int[]{i,j};
+                }
+            }
+        }
+        return null;
+    }
     private int[] findEmptyField(Point2D point)
     {
         for(int i = 0 ; i<17; i++)
@@ -98,18 +122,85 @@ public class BoardGuiPanel extends JPanel
         return null;
     }
 
-    private class MouseHandler extends MouseAdapter
+    private class MouseHandler extends MouseAdapter implements Serializable
     {
+
         public void mousePressed(MouseEvent event)
         {
-            if(isYourTurn) {
-                if (pawnToMove == null) {
-                    pawnToMove = findPawn(event.getPoint());
-                } else if (fieldToMove == null) {
-                    fieldToMove = findEmptyField(event.getPoint());
-                }
+            if(pawnToMove == null)
+            {
+                pawnToMove = findPawn(event.getPoint());
+            }
+        }
 
-                if (pawnToMove != null && fieldToMove != null) {
+
+//        public void mousePressed(MouseEvent event)
+//        {
+//            if(isYourTurn) {
+//                if (pawnToMove == null) {
+//                    pawnToMove = findPawn(event.getPoint());
+//                }
+////                else if (fieldToMove == null) {
+////                    fieldToMove = findEmptyField(event.getPoint());
+////                }
+//
+////                if (pawnToMove != null && fieldToMove != null) {
+////                    synchronized (this) {
+////                        notifyAll();
+////                    }
+////                    moveSignal = true;
+////                }
+//            }
+//        }
+
+        public void mouseReleased (MouseEvent event)
+        {
+            if(fieldToMove == null) {
+                if (pawnToMove != null) {
+                    fieldToMove = findEmptyField(event.getPoint());
+                    if(fieldToMove != null) {
+                        board[fieldToMove[0]][fieldToMove[1]].setPlayerNumber(playerNumber);
+                    }
+                    motionCircle = null;
+                    repaint();
+                    synchronized (this) {
+                        notifyAll();
+                    }
+                    moveSignal = true;
+                }
+            }
+        }
+
+    }
+    private class MouseMotionHandler extends MouseMotionAdapter
+    {
+        @Override
+        public void mouseMoved(MouseEvent event) {
+            if (isYourTurn) {
+                if (findPawn(event.getPoint()) != null)
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                else if (findOtherPlayerPawn(event.getPoint()) != null)
+                    setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+                else
+                    setCursor(Cursor.getDefaultCursor());
+            }
+//            else
+//                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        }
+        @Override
+        public void mouseDragged (MouseEvent event)
+        {
+            if(isYourTurn) {
+                if (pawnToMove != null && fieldToMove == null) {
+                    motionCircle = new Ellipse2D.Double(event.getX()-((double)Field.DEFAULT_RADIUS/2), event.getY()-((double)Field.DEFAULT_RADIUS/2), Field.DEFAULT_RADIUS, Field.DEFAULT_RADIUS);
+                    board[pawnToMove[0]][pawnToMove[1]].setPlayerNumber(0);
+                    repaint();
+                }
+                if(pawnToMove != null && fieldToMove == null && event.getModifiersEx() == event.MOUSE_RELEASED)
+                {
+                    fieldToMove = findEmptyField(event.getPoint());
+                    motionCircle = null;
+                    repaint();
                     synchronized (this) {
                         notifyAll();
                     }

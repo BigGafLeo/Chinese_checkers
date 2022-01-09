@@ -47,6 +47,7 @@ public class Field implements Serializable {
         return posy;
     }
 
+
     /**
      * Metoda przydzielająca do danego pola numer gracza wraz z kolorem
      * @param playerNumber
