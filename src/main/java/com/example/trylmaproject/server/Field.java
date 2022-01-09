@@ -1,10 +1,5 @@
 package com.example.trylmaproject.server;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Shape;
-
 import java.awt.geom.Ellipse2D;
 import java.io.Serializable;
 
@@ -15,14 +10,11 @@ import java.io.Serializable;
  * @author Mateusz Teplicki
  */
 public class Field implements Serializable {
-    private int posx;
-    private int posy;
 
     /**
      * Który gracz okupuje dane pole w grze
      */
     private Pawn pawn = null;
-    private int playerNumber;
 
     /**
      * Kółko, które będzie rysowane w GUI
@@ -39,16 +31,8 @@ public class Field implements Serializable {
         return pawn.getPlayerNumber();
     }
 
-    public int getPosx(){
-        return posx;
-    }
-
-    public int getPosy(){
-        return posy;
-    }
-
     /**
-     * Metoda przydzielająca do danego pola numer gracza wraz z kolorem
+     * Metoda przydzielająca do danego pola numer gracza
      * @param playerNumber
      */
     public void setPlayerNumber(int playerNumber){
@@ -63,24 +47,6 @@ public class Field implements Serializable {
         return pawn;
     }
 
-    Field(int posy, int posx){
-        this.posx=posx;
-        this.posy=posy;
-
-    }
-
-    /**
-     * Czy paramatry zawierają się w kólku
-     * @param x
-     * @param y
-     * @return
-     */
-    public boolean isHit(int x, int y)
-    {
-        return circle.getBounds().contains(x,y);
-    }
-
-
     public Ellipse2D.Double fieldDrawing(double posy, double posx)
     {
         circle = new Ellipse2D.Double(posx,posy,DEFAULT_RADIUS,DEFAULT_RADIUS);
@@ -93,9 +59,16 @@ public class Field implements Serializable {
 
 }
 
+/**
+ * Klasa implementująca funkcjonalność pionka
+ * @see Field
+ * @see Board
+ */
 class Pawn implements Serializable{
+    /**
+     * Do jakiego gracza należy dany pionek
+     */
     private int playerNumber = 0;
-    boolean IS_ABLE_TO_MOVE_AGAIN = false;
 
     Pawn(int playerNumber){
         this.playerNumber=playerNumber;
