@@ -133,44 +133,26 @@ public class BoardGuiPanel extends JPanel
             }
         }
 
-
-//        public void mousePressed(MouseEvent event)
-//        {
-//            if(isYourTurn) {
-//                if (pawnToMove == null) {
-//                    pawnToMove = findPawn(event.getPoint());
-//                }
-////                else if (fieldToMove == null) {
-////                    fieldToMove = findEmptyField(event.getPoint());
-////                }
-//
-////                if (pawnToMove != null && fieldToMove != null) {
-////                    synchronized (this) {
-////                        notifyAll();
-////                    }
-////                    moveSignal = true;
-////                }
-//            }
-//        }
-
         public void mouseReleased (MouseEvent event)
         {
             if(fieldToMove == null) {
                 if (pawnToMove != null) {
                     fieldToMove = findEmptyField(event.getPoint());
-//                    if(fieldToMove != null) {
-//                        board[fieldToMove[0]][fieldToMove[1]].setPlayerNumber(playerNumber);
-//                    }
                     motionCircle = null;
-//                    repaint();
-                    synchronized (this) {
-                        notifyAll();
+                    if(fieldToMove == null) {
+                        board[pawnToMove[0]][pawnToMove[1]].setPlayerNumber(playerNumber);
+                        pawnToMove = null;
+                        repaint();
                     }
-                    moveSignal = true;
+                    if(fieldToMove != null) {
+                        synchronized (this) {
+                            notifyAll();
+                        }
+                        moveSignal = true;
+                    }
                 }
             }
         }
-
     }
     private class MouseMotionHandler extends MouseMotionAdapter
     {
