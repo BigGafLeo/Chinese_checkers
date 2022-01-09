@@ -5,7 +5,6 @@ import com.example.trylmaproject.server.Field;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
     String serverAddress;
@@ -15,16 +14,18 @@ public class Client {
     BoardGuiFrame boardGuiFrame;
     Field[][] board;
     int playerNumber;
+    int port;
 
-    public Client(String serverAddress)
+    public Client(String serverAddress, int port)
     {
         this.serverAddress = serverAddress;
+        this.port = port;
     }
     private void run() throws IOException
     {
         try
         {
-            var socket = new Socket(serverAddress,59090);
+            var socket = new Socket(serverAddress,port);
             out = new PrintWriter(socket.getOutputStream(),true);
             ois = new ObjectInputStream(socket.getInputStream());
             var line = (String)ois.readObject();
@@ -125,7 +126,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Client client = new Client("localhost");
+        Client client = new Client("localhost", 59090);
         try {
             client.run();
         } catch (IOException e) {
