@@ -62,6 +62,7 @@ public class ClientMock implements Runnable{
                 }
                 line = (String)ois.readObject();
                 if(line.equals("KOLEJKA: TAK")){
+                    //Jeśli kolejkę ma gracz numer jeden, wykonaj poprawny ruch dla gracza numer jeden
                     if(numer == 1){
                         out.println("RUCH: 15 13 16 12");
                         System.out.println("RUCH: 15 13 16 12 - GRACZ" + numer);
@@ -73,6 +74,7 @@ public class ClientMock implements Runnable{
                         System.out.println("POMIN - " + numer);
                         break;
                     }
+                    //Jeśli kolejkę ma gracz numer dwa, wykonaj poprawny ruch dla gracza numer dwa
                     if(numer == 2){
                         out.println("RUCH: 15 3 16 4");
                         System.out.println("RUCH: 15 3 16 4 - GRACZ" + numer);

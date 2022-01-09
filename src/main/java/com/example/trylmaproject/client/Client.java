@@ -40,9 +40,6 @@ public class Client {
                     out.println(queFrame.getNameToServer());
                     break;
                 }
-                else{
-
-                }
             }
 
 
@@ -64,7 +61,6 @@ public class Client {
                 if(boardGuiFrame == null){
                     queFrame.setVisible(false);
                     boardGuiFrame = new BoardGuiFrame(playerNumber,board);
-                    boardGuiFrameCreaction();
                 }
                 else boardGuiFrame.boardRepaint(board);
                 line = (String)ois.readObject();
@@ -115,14 +111,7 @@ public class Client {
         queFrame.setDefaultCloseOperation(3);
         queFrame.setTitle("Kolejka gracz: "+ playerNumber);
         queFrame.setVisible(true);
-        queFrame.setLocationRelativeTo((Component) null);
-    }
-    private void boardGuiFrameCreaction()
-    {
-        boardGuiFrame.setDefaultCloseOperation(3);
-        boardGuiFrame.setTitle("Warcaby gracz: " + playerNumber);
-        boardGuiFrame.setVisible(true);
-        boardGuiFrame.setLocationRelativeTo((Component) null);
+        queFrame.setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
