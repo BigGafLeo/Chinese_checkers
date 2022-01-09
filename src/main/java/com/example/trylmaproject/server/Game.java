@@ -155,7 +155,8 @@ public class Game implements Runnable{
     }
 
     public String getName(int playerNumber){
-        return players[playerNumber].getName();
+        if(players[playerNumber] != null) return players[playerNumber].getName();
+        return null;
     }
 
 
@@ -313,16 +314,16 @@ public class Game implements Runnable{
                                         board.doMove(number, Integer.parseInt(commandArray[1]), Integer.parseInt(commandArray[2]), Integer.parseInt(commandArray[3]), Integer.parseInt(commandArray[4]));
                                         oos.writeObject("AKCEPTACJA");
                                         oos.writeObject(board.getBoard());
+                                        oos.reset();
                                     } catch (IllegalMoveException exception) {
                                         oos.writeObject("POWTÓRZ");
-                                        oos.reset();
                                     }
                                     if(isWinner()){
                                         announceLastWinner(name);
                                         break;
                                     }
                                 } else {
-                                    oos.writeObject("POWTÓRZ");
+                                    oos.writeObject("POWTÓRZ - coś nie tak z komendą");
                                 }
                             }
                             board.deleteMovablePawn();
