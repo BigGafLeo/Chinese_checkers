@@ -1,4 +1,5 @@
 import com.example.trylmaproject.server.Field;
+import com.example.trylmaproject.server.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -53,6 +54,7 @@ public class ClientMock implements Runnable{
             while (true)
             {
                 board = (Field[][])ois.readObject();
+                Player[] player = (Player[])ois.readObject();
                 line = (String)ois.readObject();
                 if(line.startsWith("KONIEC_GRY: ")){
                     break;
