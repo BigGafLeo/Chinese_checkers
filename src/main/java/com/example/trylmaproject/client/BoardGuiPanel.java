@@ -158,11 +158,11 @@ public class BoardGuiPanel extends JPanel
             if(fieldToMove == null) {
                 if (pawnToMove != null) {
                     fieldToMove = findEmptyField(event.getPoint());
-                    if(fieldToMove != null) {
-                        board[fieldToMove[0]][fieldToMove[1]].setPlayerNumber(playerNumber);
-                    }
+//                    if(fieldToMove != null) {
+//                        board[fieldToMove[0]][fieldToMove[1]].setPlayerNumber(playerNumber);
+//                    }
                     motionCircle = null;
-                    repaint();
+//                    repaint();
                     synchronized (this) {
                         notifyAll();
                     }

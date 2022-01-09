@@ -97,6 +97,9 @@ public class Client {
                         if (line.equals("AKCEPTACJA")){
                             boardGuiFrame.boardRepaint((Field[][])ois.readObject());
                         }
+                        else{
+                            boardGuiFrame.boardRepaint((Field[][])ois.readObject());
+                        }
                     }
                 }
                 else boardGuiFrame.setTurn(false);

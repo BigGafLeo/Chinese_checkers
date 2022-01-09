@@ -388,6 +388,8 @@ public class Game implements Runnable{
                                     oos.reset();
                                 } catch (IllegalMoveException exception) {
                                     oos.writeObject("POWTÓRZ");
+                                    oos.writeObject(board.getBoard());
+                                    oos.reset();
                                 }
                                 if(isWinner()){
                                     announceLastWinner(name);
