@@ -252,6 +252,7 @@ public class Game implements Runnable{
 
         private final Socket socket;
         private String lastWinner;
+        private int localNumber;
         public boolean IS_ACTIVE = true;
         private boolean IS_YOUR_TURN = false;
         private boolean IS_WAITING = false;
@@ -266,7 +267,7 @@ public class Game implements Runnable{
          */
         PlayerThread(Socket socket, int number){
             this.socket = socket;
-            player.number = number;
+            localNumber = number;
         }
 
         //-------------------------------------------------------------------------------------------//
@@ -444,6 +445,7 @@ public class Game implements Runnable{
             }
             try{
                 player = new Player();
+                player.number = localNumber;
                 Scanner in = new Scanner(socket.getInputStream());
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 prepareForGame(in, oos);
