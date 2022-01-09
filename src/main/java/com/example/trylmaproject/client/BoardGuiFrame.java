@@ -6,12 +6,14 @@ import com.example.trylmaproject.server.Player;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.example.trylmaproject.client.BoardGuiPanel.colorForPlayer;
+
 public class BoardGuiFrame extends JFrame
 {
 	private BoardGuiPanel panel;
 	private JPanel extraPanel;
 	private JTextArea communication;
-	private JTextArea playersList;
+	private JPanel playersList;
 	private int playerNumber;
 	private JButton skipButton;
 	private String[] scoreTable;
@@ -19,6 +21,7 @@ public class BoardGuiFrame extends JFrame
 	private boolean turn = false;
 	private int homManyPlayers;
 	private Player[] players;
+	private TextField[] playersName;
 
 	public BoardGuiFrame(int playerNumber, Field[][] board,Player[] players)
 	{
@@ -28,38 +31,37 @@ public class BoardGuiFrame extends JFrame
 		homManyPlayers = 0;
 
 		panel = new BoardGuiPanel(board, playerNumber);
+		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		this.add(panel,BorderLayout.CENTER);
 
 		extraPanel = new JPanel();
 		extraPanel.setLayout(new BorderLayout());
 		extraPanel.setPreferredSize(new Dimension(250,1000));
+		extraPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-//		String list;
-//		list = players[0].name;
-//		for(int i = 1; i < players.length; i++)
-//		{
-//
-//		}
-		playersList = new JTextArea(12,1);
-		playersList.setEditable(false);
-		playersList.setLineWrap(false);
+		playersName =  new TextField[players.length];
+		playersList = new JPanel(new GridLayout(players.length,1));
+		playersList.setBackground(Color.WHITE);
+		playersList.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		int i = 0;
-		//TODO Zmienić textarea na komponent z małymi text fieldami! i pokolorować tak jak na dole
-		while(players[i] != null) {
-
-			playersList.append(players[i].name);
-			playersList.setForeground(panel.colorForPlayer(players[i].number));
-			playersList.append("\n");
+		while(i<6 && players[i] != null) {
+			playersName[i] = new TextField(players[i].name);
+			playersName[i].setForeground(colorForPlayer(players[i].number));
+			playersName[i].setEditable(false);
+			playersName[i].setBackground(Color.WHITE);
+			playersList.add(playersName[i]);
 			i++;
 		}
+
 
 		extraPanel.add(playersList,BorderLayout.NORTH);
 
 		communication = new JTextArea();
 		communication.setEditable(false);
 		communication.setLineWrap(true);
-		communication.setText("Lolol\ndsad\ndasdas\ndjasbdl");
+		communication.setText("Gra rozpoczęta\n");
+		communication.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		extraPanel.add(communication,BorderLayout.CENTER);
 
 		skipButton = new JButton("Skończ turę");
@@ -97,11 +99,17 @@ public class BoardGuiFrame extends JFrame
 	{
 		scoreTable[homManyPlayers] = winner;
 		homManyPlayers++;
+		winnerCommunicat(winner);
+	}
+	private void winnerCommunicat(String winner)
+	{
+		communication.append("Gracz " + winner + "zajął " + homManyPlayers + "miejsce!!!\n");
 	}
 	public void setTurn(boolean turn)
 	{
 		this.turn = turn;
 		panel.setIsYourTurn(turn);
+		communication.append("Twoja tura!\n");
 	}
 
 	public void setPlayerList(Player[] players){

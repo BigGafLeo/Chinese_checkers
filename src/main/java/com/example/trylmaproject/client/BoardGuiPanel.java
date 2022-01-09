@@ -19,6 +19,7 @@ public class BoardGuiPanel extends JPanel
     public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2;
     private int[] pawnToMove;
     private int[] fieldToMove;
+    private int borderSize = 10;
     private boolean isYourTurn = false;
     Field[][] board;
     private int playerNumber;
@@ -45,6 +46,12 @@ public class BoardGuiPanel extends JPanel
 
     public void paintComponent(Graphics g)
     {
+        double panelSizeX = this.getWidth()/13; //13
+        double panelSizeY = this.getHeight()/17; //17
+        if(panelSizeY > panelSizeX)
+            Field.DEFAULT_RADIUS = (int) panelSizeX;
+        else
+            Field.DEFAULT_RADIUS = (int) panelSizeY;
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         for(int i = 0; i<17;i++)
@@ -70,7 +77,7 @@ public class BoardGuiPanel extends JPanel
         }
     }
 
-    public Color colorForPlayer(int playerNumber)
+    public static Color colorForPlayer(int playerNumber)
     {
         return switch (playerNumber) {
             case 1 -> Color.BLUE;
