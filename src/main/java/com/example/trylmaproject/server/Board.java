@@ -20,6 +20,7 @@ public class Board {
      */
     private Pawn movablePawn = null;
 
+    private boolean isAbleToDoSecondMove = true;
     /**
      * Dwuwymiarowa tablica do gry o wymiarach 25 na 17, gdzie pola są rozstawione po
      * przekątnych.
@@ -54,32 +55,32 @@ public class Board {
     public void doMove(int player, int startX, int startY, int endX, int endY) throws IllegalMoveException {
 
 
-        if (board[startY][startX] != null && board[endY][endX] != null){
+        if (board[startY][startX] != null && board[endY][endX] != null && isAbleToDoSecondMove){
             if(board[startY][startX].getPlayerNumber() == player && board[endY][endX].getPlayerNumber() == 0){
-                if(isAbleToMovePawn(board[startY][startX].getPawn())){
-                    if(isInEndingField(player, startX, startY) && !isInEndingField(player, endX, endY)){
-                        throw new IllegalMoveException();
+                if(isInEndingField(player, startX, startY) && !isInEndingField(player, endX, endY)){
+                    throw new IllegalMoveException();
+                }
+                else{
+                    int diffX = Math.abs(startX - endX);
+                    int diffY = Math.abs(startY - endY);
+                    if(diffX == 1 && diffY == 1 && movablePawn == null){
+                        board[endY][endX].setPawn(board[startY][startX].getPawn());
+                        board[startY][startX].setPawn(null);
+                        isAbleToDoSecondMove = false;
                     }
-                    else{
-                        int diffX = Math.abs(startX - endX);
-                        int diffY = Math.abs(startY - endY);
-                        if(diffX == 1 && diffY == 1){
+                    else if(diffX == 2 && diffY == 2){
+                        int middleX = (startX + endX) / 2;
+                        int middleY = (startY + endY) / 2;
+                        if(board[middleY][middleX].getPlayerNumber() != 0 && isAbleToMovePawn(board[startY][startX].getPawn())){
                             board[endY][endX].setPawn(board[startY][startX].getPawn());
                             board[startY][startX].setPawn(null);
-                        }
-                        else if(diffX == 2 && diffY == 2){
-                            int middleX = (startX + endX) / 2;
-                            int middleY = (startY + endY) / 2;
-                            if(board[middleY][middleX].getPlayerNumber() != 0){
-                                board[endY][endX].setPawn(board[startY][startX].getPawn());
-                                board[startY][startX].setPawn(null);
-                            }
-                            else throw new IllegalMoveException();
+                            setMovablePawn(board[endY][endX].getPawn());
+                            isAbleToDoSecondMove = true;
                         }
                         else throw new IllegalMoveException();
                     }
+                    else throw new IllegalMoveException();
                 }
-                else throw new IllegalMoveException();
             }
             else throw new IllegalMoveException();
         }
@@ -106,7 +107,8 @@ public class Board {
         movablePawn = pawn;
     }
 
-    public void deleteMovablePawn(){
+    public void resetMovablePawn(){
+        isAbleToDoSecondMove = true;
         movablePawn = null;
     }
     /**

@@ -326,7 +326,7 @@ public class Game implements Runnable{
                                     oos.writeObject("POWTÓRZ - coś nie tak z komendą");
                                 }
                             }
-                            board.deleteMovablePawn();
+                            board.resetMovablePawn();
                             synchronized(Game.this){
                                 Game.this.notify();
                             }
