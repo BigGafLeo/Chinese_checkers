@@ -70,7 +70,7 @@ public class BoardGuiPanel extends JPanel
         }
     }
 
-    private Color colorForPlayer(int playerNumber)
+    public Color colorForPlayer(int playerNumber)
     {
         return switch (playerNumber) {
             case 1 -> Color.BLUE;
@@ -132,26 +132,6 @@ public class BoardGuiPanel extends JPanel
                 pawnToMove = findPawn(event.getPoint());
             }
         }
-
-
-//        public void mousePressed(MouseEvent event)
-//        {
-//            if(isYourTurn) {
-//                if (pawnToMove == null) {
-//                    pawnToMove = findPawn(event.getPoint());
-//                }
-////                else if (fieldToMove == null) {
-////                    fieldToMove = findEmptyField(event.getPoint());
-////                }
-//
-////                if (pawnToMove != null && fieldToMove != null) {
-////                    synchronized (this) {
-////                        notifyAll();
-////                    }
-////                    moveSignal = true;
-////                }
-//            }
-//        }
 
         public void mouseReleased (MouseEvent event)
         {

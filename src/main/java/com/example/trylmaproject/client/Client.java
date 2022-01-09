@@ -61,7 +61,7 @@ public class Client {
                 board = (Field[][])ois.readObject();
                 if(boardGuiFrame == null){
                     queFrame.setVisible(false);
-                    boardGuiFrame = new BoardGuiFrame(playerNumber,board);
+                    boardGuiFrame = new BoardGuiFrame(playerNumber,board,(Player[])ois.readObject());
                 }
                 else boardGuiFrame.boardRepaint(board);
                 boardGuiFrame.setPlayerList((Player[])ois.readObject());
