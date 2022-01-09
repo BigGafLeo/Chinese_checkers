@@ -18,10 +18,6 @@ public class BoardGuiFrameTest {
             e.printStackTrace();
         }
         BoardGuiFrame boardGuiFrame = new BoardGuiFrame(2, board.getBoard());
-        //boardGuiFrame.setDefaultCloseOperation(3);
-        //boardGuiFrame.setTitle("Warcaby");
-        //boardGuiFrame.setVisible(true);
-        //boardGuiFrame.setLocationRelativeTo((Component) null);
         boardGuiFrame.setTurn(true);
         var line = boardGuiFrame.getMessage();
         System.out.println(line);
