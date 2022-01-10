@@ -134,7 +134,7 @@ public class BoardGuiFrame extends JFrame
 					panel.notify();
 				}
 			}
-			else JOptionPane.showConfirmDialog(null,"To nie twoja kolejka!", "ERROR", JOptionPane.ERROR_MESSAGE);
+			else JOptionPane.showMessageDialog(null,"To nie twoja kolejka!");
 
 		});
 		extraPanel.add(skipButton,BorderLayout.SOUTH);
