@@ -6,7 +6,7 @@ import com.example.trylmaproject.server.Player;
 import java.io.*;
 import java.net.Socket;
 
-public class Client {
+public class Client implements Runnable{
     String serverAddress;
     PrintWriter out;
     ObjectInputStream ois;
@@ -21,7 +21,7 @@ public class Client {
         this.serverAddress = serverAddress;
         this.port = port;
     }
-    private void run() throws IOException
+    public void run()
     {
         try
         {
@@ -123,10 +123,6 @@ public class Client {
 
     public static void main(String[] args) {
         Client client = new Client("localhost", 59090);
-        try {
-            client.run();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        client.run();
     }
 }
