@@ -2,76 +2,106 @@ package com.example.trylmaproject.client;
 
 import javax.swing.*;
 import java.awt.*;
-//TODO Naprawić grafikę i ustawić wszystko w jednej lini
+
+/**
+ * Klasa Implementująca okno oczekiwania na graczy przed grą
+ * Umożliwia ono wybranie nazwy gracza
+ * @author Mateusz Teplicki, Karol Dzwonkowski
+ */
 public class QueFrame extends JFrame {
-//    private JPanel quePanel;
-//
-//    public QueFrame()
-//    {
-//        this.quePanel = new QuePanel();
-//        this.getContentPane().add(this.quePanel);
-//        pack();
-//    }
+
+    /**
+     * Komponenty występujące w QueFrame
+     */
     private JPanel quePanel;
-    private ImagePanel imagePanel;
     private JButton checkName;
     private JButton startGame;
     private JTextField playerName;
-    private String nameToServer;
-    private boolean nameReadyToSend = false;
-    private int playerNumber;
+    private JTextField textField;
+
+    /**
+     * Zmienne sterujące rozgrywka
+     */
     private boolean readyToPlay;
-    int DEFAULT_WIDTH = 938;
-    int DEFAULT_HEIGHT = 800;
+    private boolean nameReadyToSend = false;
+    private String nameToServer;
 
+    /**
+     * Numer przypisany do gracza
+     */
+    private int playerNumber;
 
+    /**
+     * Predefiniowane wielkości okna
+     */
+    int DEFAULT_WIDTH = 400;
+    int DEFAULT_HEIGHT = 200;
+
+    /**
+     * Konstruktor Frame'a dla kolejki oczekiwania.
+     * Konstruktor wywołuje niezbędne metody tworzące.
+     * @param playerNumber
+     */
     public QueFrame(int playerNumber)
     {
-        this.setLayout(new BorderLayout());
-
         this.playerNumber = playerNumber;
         this.setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
+        this.setResizable(false);
 
-        imagePanel = new ImagePanel();
-//
-        add(imagePanel,BorderLayout.NORTH);
-        imagePanel.repaint();
-
+        //Wywołanie metody przygotowującej panel
         setQuePanel();
-        this.getContentPane().add(this.quePanel,BorderLayout.CENTER);
+        this.getContentPane().add(this.quePanel);
 
         pack();
-
     }
+
+    /**
+     * Metoda przygotowująca panel do dodania go do Frame'a.
+     * Wywołuje metodę tworzącą nasłuch dla przycisków.
+     */
     private void setQuePanel()
     {
         quePanel = new JPanel();
-        quePanel.setLayout(new BoxLayout(quePanel,3));
+        quePanel.setLayout(new GridLayout(4,1));
 
+        //Przygotowanie pola z tekstem
+        textField = new JTextField("Wprowadź swoją nazwę:");
+        textField.setEditable(false);
+        quePanel.add(textField);
+
+        //Przygotowanie pola, w którym gracz wpisuje swoją nazwę
         playerName = new JTextField();
-        playerName.setText("Wprowadź swoją nazwę");
         playerName.setEditable(true);
         quePanel.add(playerName);
 
+        //Przygotowanie przycisku zatwierdzenia nazwy gracza
         checkName = new JButton();
+        checkName.setSize(quePanel.getWidth(),checkName.getHeight());
         checkName.setText("Zatwierdź nazwę gracza");
         quePanel.add(checkName);
 
+        //Przygotowanie przycisku rozpoczęcia rozgrywki,
+        //Jeżeli gracz jest pierwszy ma przycisk funkcyjny.
         startGame = new JButton();
         if(playerNumber == 1)
             startGame.setText("Rozpoczni gre");
-        else
+        else {
             startGame.setText("Oczekiwanie na hosta");
+            startGame.setEnabled(false);
+        }
+        startGame.setSize(quePanel.getWidth(),startGame.getHeight());
         quePanel.add(startGame);
 
         setButtons();
     }
 
+    /**
+     * Metoda przygotowująca nasłuchwiacze do przycisków.
+     */
     private void setButtons()
     {
-        /**
-         * Ustawienie actionlistnerów dla przycisków w gui z uwzględnieniem pierwszego gracza który ma aktywny przycisk początku rozgrywki.
-         */
+
+        //Przycisk zatwierdzenia imienia
         checkName.addActionListener(event ->
         {
             nameToServer = playerName.getText();
@@ -80,6 +110,8 @@ public class QueFrame extends JFrame {
                 notify();
             }
         });
+
+        //Przycisk rozpoczęcia gry
         if(playerNumber == 1)
             startGame.addActionListener(event ->
             {
@@ -95,10 +127,18 @@ public class QueFrame extends JFrame {
             });
     }
 
+    /**
+     * Metoda zwracająca nazwę do serwera
+     * @return zwraca nazwę do serwera
+     */
     public String getNameToServer() {
         return nameToServer;
     }
 
+    /**
+     * Metoda budzi klienta i zezwala na pobranie informacji o imieniu
+     * @return wartość dla nasłuchiwacza informująca o gotowości do pobrania imienia
+     */
     public boolean isNameReadyToSend() {
         synchronized (this){
             try {
@@ -110,6 +150,10 @@ public class QueFrame extends JFrame {
         return nameReadyToSend;
     }
 
+    /**
+     * Metoda budzi klioenta i zezwala na pobranie informacji o rozpoczęciu gry
+     * @return wartość dla nasłuchiwacza informująca o gotowości do gry
+     */
     public boolean isReadyToPlay() {
         synchronized (this) {
             try {
@@ -119,28 +163,5 @@ public class QueFrame extends JFrame {
             }
         }
         return readyToPlay;
-    }
-}
-class ImagePanel extends JPanel
-{
-    private Image image;
-    int IMAGE_WIDTH;
-    int IMAGE_HIGHT;
-    public ImagePanel()
-    {
-        image = new ImageIcon("Title.png").getImage();
-    }
-    public void paintComponent(Graphics g)
-    {
-        if(image == null)
-            return;
-
-        IMAGE_WIDTH = image.getWidth(this);
-        IMAGE_HIGHT = image.getHeight(this);
-        g.drawImage(image,0,0,null);
-    }
-    public Dimension getPreferedSize()
-    {
-        return new Dimension(IMAGE_WIDTH,IMAGE_HIGHT);
     }
 }

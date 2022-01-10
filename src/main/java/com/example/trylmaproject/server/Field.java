@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Klasa przechowująca informacje o pojedynczym polu na planszy
  * do gry w chińskie warcaby
- * @author Mateusz Teplicki
+ * @author Mateusz Teplicki, Karol Dzwonkowski
  */
 public class Field implements Serializable {
 

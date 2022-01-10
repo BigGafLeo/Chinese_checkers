@@ -18,7 +18,7 @@ public class BoardGuiFrame extends JFrame
 {
 
 	/**
-	 * Elementy występujące w BoardGuiFrame
+	 * Komponenty występujące w BoardGuiFrame
 	 */
 
 	private BoardGuiPanel panel;
