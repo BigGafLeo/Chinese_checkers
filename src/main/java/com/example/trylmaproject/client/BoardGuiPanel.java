@@ -97,11 +97,11 @@ public class BoardGuiPanel extends JPanel
             {
                 if(board[i][j] != null)
                 {
-                    g2D.draw(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,((double) j)/2*Field.DEFAULT_RADIUS));
+                    g2D.draw(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,5 + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
                     if (board[i][j].getPlayerNumber()!=0)
                     {
                         g2D.setPaint(colorForPlayer(board[i][j].getPlayerNumber()));
-                        g2D.fill(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,((double) j)/2*Field.DEFAULT_RADIUS));
+                        g2D.fill(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,5 + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
                         g2D.setPaint(Color.BLACK);
                     }
                 }

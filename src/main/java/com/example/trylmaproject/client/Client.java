@@ -63,8 +63,10 @@ public class Client {
                     queFrame.setVisible(false);
                     boardGuiFrame = new BoardGuiFrame(playerNumber,board,(Player[])ois.readObject());
                 }
-                else boardGuiFrame.boardRepaint(board);
-                boardGuiFrame.setPlayerList((Player[])ois.readObject());
+                else {
+                    boardGuiFrame.boardRepaint(board);
+                    boardGuiFrame.setPlayerList((Player[])ois.readObject());
+                }
                 line = (String)ois.readObject();
                 if(line.startsWith("KONIEC_GRY: ")){
                     boardGuiFrame.endGame(line.substring(12));

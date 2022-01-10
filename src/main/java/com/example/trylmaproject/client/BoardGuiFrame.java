@@ -189,7 +189,7 @@ public class BoardGuiFrame extends JFrame
 
 	/**
 	 * Metoda wywoływana, gdy wszyscy gracze ukończą rozgrywkę
-	 * @param looser nazwa gracza, który jako ostatni ukończył grę.
+	 * @param losser nazwa gracza, który jako ostatni ukończył grę.
 	 */
 	public void endGame(String losser)
 	{

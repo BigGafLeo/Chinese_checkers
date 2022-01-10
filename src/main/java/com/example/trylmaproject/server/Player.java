@@ -11,4 +11,13 @@ public class Player implements Serializable {
     public int number;
     public String name;
     public boolean IS_WINNER = false;
+
+    public Player (int number, String name){
+        this.number = number;
+        this.name = name;
+    }
+
+    public Player (){
+
+    }
 }
