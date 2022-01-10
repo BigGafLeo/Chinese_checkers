@@ -20,7 +20,7 @@ public class Field implements Serializable {
      * Kółko, które będzie rysowane w GUI
      */
     private Ellipse2D.Double circle;
-    public static int DEFAULT_RADIUS = 20;
+    public static int DEFAULT_RADIUS = 40;
 
     /**
      * Zwaraca numer gracza, który okupuje dane stanowisko

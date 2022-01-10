@@ -22,10 +22,9 @@ import java.io.Serializable;
 public class BoardGuiPanel extends JPanel
 {
     //Domyślne wymiary planszy
-    public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS * 2;
-    public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS * 2;
-    //TODO dodanie ramki wokól planszy o rozmiarze borderSize
     private int borderSize = 10;
+    public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS + 20 + 24;
+    public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS + 20 + 32;
 
     //Tablice zawierające informacje o ruchu wykonanym przez gracza
     private int[] pawnToMove;
@@ -54,6 +53,16 @@ public class BoardGuiPanel extends JPanel
         this.board = board;
         this.playerNumber = playerNumber;
 
+        //Obliczanie wielkości panelu uzależnione od wielkości okna
+        double panelSizeX = this.getWidth() / 13 + 24 + borderSize;
+        double panelSizeY = this.getHeight() / 17 + 32 + borderSize;
+
+        //Ustawianie wielkości pól uzależnione od wielkości panelu
+        if(panelSizeY > panelSizeX)
+            Field.DEFAULT_RADIUS = (int) panelSizeX;
+        else
+            Field.DEFAULT_RADIUS = (int) panelSizeY;
+
         //Ustawienie podstawowych własności Panelu
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -80,12 +89,12 @@ public class BoardGuiPanel extends JPanel
     public void paintComponent(Graphics g)
     {
         //Obliczanie wielkości panelu uzależnione od wielkości okna
-        double panelSizeX = this.getWidth() / 13;
+        double panelSizeX = this.getWidth()/ 13;
         double panelSizeY = this.getHeight() / 17;
 
         //Ustawianie wielkości pól uzależnione od wielkości panelu
         if(panelSizeY > panelSizeX)
-            Field.DEFAULT_RADIUS = (int) panelSizeX;
+            Field.DEFAULT_RADIUS = (int) panelSizeX -2;
         else
             Field.DEFAULT_RADIUS = (int) panelSizeY;
         super.paintComponent(g);
@@ -97,11 +106,11 @@ public class BoardGuiPanel extends JPanel
             {
                 if(board[i][j] != null)
                 {
-                    g2D.draw(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,5 + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
+                    g2D.draw(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
                     if (board[i][j].getPlayerNumber()!=0)
                     {
                         g2D.setPaint(colorForPlayer(board[i][j].getPlayerNumber()));
-                        g2D.fill(board[i][j].fieldDrawing(i*Field.DEFAULT_RADIUS,5 + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
+                        g2D.fill(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
                         g2D.setPaint(Color.BLACK);
                     }
                 }

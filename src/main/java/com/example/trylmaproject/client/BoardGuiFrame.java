@@ -24,6 +24,7 @@ public class BoardGuiFrame extends JFrame
 	private BoardGuiPanel panel;
 	private JPanel extraPanel;
 	private JTextArea communication;
+	private JScrollPane scrollCommunication;
 	private JPanel playersList;
 	private JButton skipButton;
 	private TextField[] playersName;
@@ -90,7 +91,7 @@ public class BoardGuiFrame extends JFrame
 		//Ustawienie podstawowych własności panelu
 		extraPanel = new JPanel();
 		extraPanel.setLayout(new BorderLayout());
-		extraPanel.setPreferredSize(new Dimension(250,1000));
+		extraPanel.setPreferredSize(new Dimension(250,700));
 		extraPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		//Ustawienie podstawowych własności panelu zawierającego listę graczy
@@ -116,9 +117,11 @@ public class BoardGuiFrame extends JFrame
 		communication = new JTextArea();
 		communication.setEditable(false);
 		communication.setLineWrap(true);
+		communication.setAutoscrolls(true);
 		communication.setText("Gra rozpoczęta\n");
 		communication.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		extraPanel.add(communication,BorderLayout.CENTER);
+		scrollCommunication = new JScrollPane(communication);
+		extraPanel.add(scrollCommunication,BorderLayout.CENTER);
 
 		//Inicjowanie przycisku zakończenia tury wraz z jego nasłuchiwaniem
 		skipButton = new JButton("Skończ turę");
@@ -143,6 +146,7 @@ public class BoardGuiFrame extends JFrame
 	public void boardRepaint(Field[][] board)
 	{
 		panel.panelRepaint(board);
+		pack();
 	}
 
 	/**
@@ -152,20 +156,24 @@ public class BoardGuiFrame extends JFrame
 	 */
 	public void whoWinner(String winner)
 	{
-		scoreTable[homManyPlayers] = winner;
-		homManyPlayers++;
-		winnerCommunicat(winner);
+		if(winner != null) {
+			scoreTable[homManyPlayers] = winner;
+			homManyPlayers++;
+			winnerCommunicat(winner);
+		}
 	}
 
 	/**
 	 * Metoda informująca użytkownika o kolejnym graczu, który ukończył rozgrywkę
 	 * przy pomocy TextArea communication
-	 * @see communication
 	 * @param winner nazwa kolejnego gracza, który ukończył rozgrywkę
 	 */
 	private void winnerCommunicat(String winner)
 	{
-		communication.append("Gracz " + winner + "zajął " + homManyPlayers + "miejsce!!!\n");
+		//TODO Jakby co to się odjebało czemu jak jest winner != null to to przechodzi a jak jest == null to jest git???
+		if(winner == null) {
+			communication.append("Gracz " + winner + " zajął " + homManyPlayers + " miejsce!!!\n");
+		}
 	}
 
 	/**
@@ -176,7 +184,8 @@ public class BoardGuiFrame extends JFrame
 	{
 		this.turn = turn;
 		panel.setIsYourTurn(turn);
-		communication.append("Twoja tura!\n");
+		if(turn)
+			communication.append("Twoja tura!\n");
 	}
 
 	/**
