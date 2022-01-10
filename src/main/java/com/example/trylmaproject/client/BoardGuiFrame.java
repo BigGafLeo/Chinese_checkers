@@ -205,6 +205,12 @@ public class BoardGuiFrame extends JFrame
 		scoreTable[homManyPlayers] = losser;
 		JOptionPane.showConfirmDialog(this, "Koniec gry\n 1." + scoreTable.toString());
 	}
+	public String getPlace(int place)
+	{
+		if(place<=players.length)
+			return scoreTable[place - 1];
+		else return null;
+	}
 
 	/**
 	 * Metoda umożliwiająca klientowi zebranie informacji o ruchu gracza

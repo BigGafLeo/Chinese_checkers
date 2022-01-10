@@ -111,7 +111,7 @@ public class QueFrame extends JFrame {
             }
         });
 
-        //Przycisk rozpoczęcia gry
+        //Przycisk rozpoczęcia gry dla gracza nr 1
         if(playerNumber == 1)
             startGame.addActionListener(event ->
             {
@@ -119,11 +119,6 @@ public class QueFrame extends JFrame {
                 synchronized (this){
                     notify();
                 }
-            });
-        else
-            startGame.addActionListener(event ->
-            {
-                JOptionPane.showMessageDialog(this,"Jedynie gracz nr 1 może rozpocząć grę.");
             });
     }
 
