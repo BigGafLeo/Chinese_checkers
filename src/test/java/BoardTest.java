@@ -1,6 +1,8 @@
 import com.example.trylmaproject.exceptions.IllegalMoveException;
 import com.example.trylmaproject.exceptions.IllegalNumberOfPlayers;
 import com.example.trylmaproject.server.Board;
+import com.example.trylmaproject.server.Field;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,6 +58,7 @@ public class BoardTest {
 
         } catch (IllegalNumberOfPlayers | IllegalMoveException e) {
             e.printStackTrace();
+            fail();
         }
     }
 
@@ -66,4 +69,37 @@ public class BoardTest {
                 new Board(1)
                 );
     }
+
+    @Test
+    public void testCreateBoard(){
+        try {
+            Board board = new Board(3);
+            Assertions.assertTrue(board.getBoard()[13][9].getPlayerNumber() > 0);
+            board = new Board(4);
+            Assertions.assertTrue(board.getBoard()[9][3].getPlayerNumber() > 0);
+            board = new Board(6);
+            Assertions.assertTrue(board.getBoard()[9][3].getPlayerNumber() > 0);
+        } catch (IllegalNumberOfPlayers e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testWinner(){
+        try {
+            Board board = new Board(2);
+            Field[][] fieldList = board.getBoard();
+            for(Field[] field1 : fieldList){
+                for(Field field2 : field1){
+                    if(field2 != null && field2.getPlayerNumber() == 2) field2.setPlayerNumber(1);
+                }
+            }
+            assertTrue(board.isWinner(1));
+        } catch (IllegalNumberOfPlayers e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

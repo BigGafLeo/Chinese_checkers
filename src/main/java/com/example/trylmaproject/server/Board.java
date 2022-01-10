@@ -35,7 +35,7 @@ public class Board {
      * przekątnych.
      * @see <a href="https://github.com/HarryZalessky/Chinese-Checkers/blob/master/docs/fig5.png">github.com/HarryZalessky/Chinese-Checkers</a>
      */
-    private final Field[][] board = new Field[H][W];
+    private Field[][] board = new Field[H][W];
 
     /**
      * 6-elementowa lista pól startowych graczy
@@ -165,6 +165,10 @@ public class Board {
             if(f.getPlayerNumber() != player) return false;
         }
         return true;
+    }
+
+    public void setBoard(Field[][] board){
+        this.board = board;
     }
 
     /**
