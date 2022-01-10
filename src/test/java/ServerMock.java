@@ -13,7 +13,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class ServerMock implements Runnable{
+public class ServerMock implements Runnable{
 
     private final ServerSocket serverSocket;
     private final PlayerThread[] players = new PlayerThread[Board.MAX_PLAYERS];

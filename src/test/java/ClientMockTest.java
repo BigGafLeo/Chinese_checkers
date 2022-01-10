@@ -39,11 +39,11 @@ public class ClientMockTest{
     @Test
     public void testMultiplePlayersWithResponse(){
         ExecutorService threads = Executors.newFixedThreadPool(3);
-        ClientMock mock1 = new ClientMock("Alice", 59090);
-        ClientMock mock2 = new ClientMock("Bob", 59090);
+        ClientMock mock1 = new ClientMock("Alice", 59093);
+        ClientMock mock2 = new ClientMock("Bob", 59093);
         Game game = null;
         try {
-            game = new Game(59090);
+            game = new Game(59093);
         } catch (IOException e) {
             e.printStackTrace();
         }
