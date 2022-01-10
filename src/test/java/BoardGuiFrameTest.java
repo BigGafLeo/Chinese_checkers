@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class BoardGuiFrameTest {
 
     @Test
@@ -34,5 +36,11 @@ public class BoardGuiFrameTest {
             Assertions.assertTrue(false);
         }
         boardGuiFrame.boardRepaint(board.getBoard());
+
+        boardGuiFrame.whoWinner("Xd");
+        assertEquals("Xd",boardGuiFrame.getPlace(1));
+
+        boardGuiFrame.endGame("Dx");
+        assertEquals("Dx",boardGuiFrame.getPlace(2));
     }
 }
