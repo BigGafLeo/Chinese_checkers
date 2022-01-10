@@ -82,7 +82,6 @@ public class Game implements Runnable{
             }
             if(GAME_STARTED){
                 whoseTurn = (int)(Math.floor(Math.random() * (playerNumber)));
-                System.out.println("whoseturn = " + whoseTurn);
                 runGame();
             }
         }
@@ -138,12 +137,10 @@ public class Game implements Runnable{
     void setPlayerTurn(){
         if(players[whoseTurn] != null && !players[whoseTurn].isWinner() && players[whoseTurn].IS_ACTIVE){
             players[whoseTurn].setTurn();
-            System.out.println("whoseturnset = " + whoseTurn);
             whoseTurn = (whoseTurn + 1) % playerNumber;
         }
         else{
             whoseTurn = (whoseTurn + 1) % playerNumber;
-            System.out.println("whoseturnNOTset = " + whoseTurn);
             setPlayerTurn();
         }
     }
@@ -301,12 +298,9 @@ public class Game implements Runnable{
          */
         public synchronized void waitForNewTurn(){
             try {
-                System.out.println("czekam");
                 IS_WAITING = true;
                 wait();
                 IS_WAITING = false;
-
-                System.out.println("zaczynam");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -335,13 +329,11 @@ public class Game implements Runnable{
             do {
                 oos.writeObject("IMIE:");
                 player.name = in.nextLine();
-                System.out.println(player.name);
             } while (player.name.isBlank());
 
             //Czekaj, aż gracz numer jeden da poprawny sygnał do startu
             if(player.number == 1){
                 while(true){
-                    System.out.println("nastart");
                     line = in.nextLine();
                     //Jeśli komunikat to nie start, albo liczba graczy jest niepoprawna
                     //(inna niż 2, 3, 4 lub 6), zwróć klientowi sygnał "JESZCZE_RAZ"

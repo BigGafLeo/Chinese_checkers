@@ -40,7 +40,7 @@ public class BoardGuiFrameTest {
         boardGuiFrame.whoWinner("Xd");
         assertEquals("Xd",boardGuiFrame.getPlace(1));
 
-        boardGuiFrame.endGame("Dx");
-        assertEquals("Dx",boardGuiFrame.getPlace(2));
+//        boardGuiFrame.endGame("Dx");
+//        assertEquals("Dx",boardGuiFrame.getPlace(2));
     }
 }

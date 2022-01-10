@@ -1,3 +1,4 @@
+import com.example.trylmaproject.client.Client;
 import com.example.trylmaproject.server.Game;
 import org.junit.jupiter.api.Test;
 
@@ -5,8 +6,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClientMockTest{
 
@@ -70,10 +70,13 @@ public class ClientMockTest{
             if(mock1.hasEnded && mock2.hasEnded) break;
         }
 
+        //ClientMock mock3 = new ClientMock("xd", 59090);
+
         assertEquals("Alice", game.getName(0));
         assertEquals("Bob", game.getName(1));
         assertTrue(mock1.moveAccepted);
         assertTrue(mock2.moveAccepted);
+//        assertFalse(game.);
     }
 
 

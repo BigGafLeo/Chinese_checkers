@@ -17,6 +17,7 @@ public class ClientMock implements Runnable{
     public boolean moveAccepted = false;
     int port;
     public boolean hasEnded = false;
+    private int counter = 0;
 
     ClientMock(String name, int port){
         this.name = name;
@@ -51,7 +52,7 @@ public class ClientMock implements Runnable{
             System.out.println("tak");
 
 
-            while (true)
+            for(int i = 0; i < 2; i++)
             {
                 board = (Field[][])ois.readObject();
                 Player[] player = (Player[])ois.readObject();
@@ -63,6 +64,7 @@ public class ClientMock implements Runnable{
                 if(line.startsWith("ZWYCIEZCA: ")){
                 }
                 line = (String)ois.readObject();
+                System.out.println(line + " " + numer);
                 if(line.equals("KOLEJKA: TAK")){
                     //Jeśli kolejkę ma gracz numer jeden, wykonaj poprawny ruch dla gracza numer jeden
                     if(numer == 1){
@@ -71,10 +73,10 @@ public class ClientMock implements Runnable{
                         line = (String)ois.readObject();
                         System.out.println(line + " " + numer);
                         moveAccepted = line.equals("AKCEPTACJA");
+                        ois.readObject();
                         System.out.println(moveAccepted + " " + numer);
                         out.println("POMIN");
                         System.out.println("POMIN - " + numer);
-                        break;
                     }
                     //Jeśli kolejkę ma gracz numer dwa, wykonaj poprawny ruch dla gracza numer dwa
                     if(numer == 2){
@@ -83,17 +85,14 @@ public class ClientMock implements Runnable{
                         line = (String)ois.readObject();
                         System.out.println(line + " " + numer);
                         moveAccepted = line.equals("AKCEPTACJA");
+                        ois.readObject();
                         System.out.println(moveAccepted + " " + numer);
                         out.println("POMIN");
                         System.out.println("POMIN - " + numer);
-                        break;
                     }
                 }
-                else{
-                    moveAccepted = true;
-                    System.out.println(moveAccepted + " " + numer);
-                    break;
-                }
+                System.out.println("KOLEJKA: NIE " + numer);
+                System.out.println(i);
             }
             hasEnded = true;
         } catch (IOException | ClassNotFoundException | InterruptedException e) {

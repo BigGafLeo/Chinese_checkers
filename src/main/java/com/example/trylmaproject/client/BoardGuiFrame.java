@@ -80,7 +80,8 @@ public class BoardGuiFrame extends JFrame
 		setTitle("Warcaby gracz: " + playerNumber);
 		setVisible(true);
 		setLocationRelativeTo(null);
-		pack();
+		setSize(800,700);
+//		pack();
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class BoardGuiFrame extends JFrame
 	public void boardRepaint(Field[][] board)
 	{
 		panel.panelRepaint(board);
-		pack();
+//		pack();
 	}
 
 	/**

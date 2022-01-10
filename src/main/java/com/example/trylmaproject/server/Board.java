@@ -167,11 +167,7 @@ public class Board {
         return true;
     }
 
-    public void setBoard(Field[][] board){
-        this.board = board;
-    }
-
-    /**
+*    /**
      * Dodaje do tablicy {@link #startingFields} pola, w który gracze zaczynają
      * i kończą grę. Na tablicy {@link #board} ma on ksztalt piramidy
      * @param number numer pola, zgodnie z konwencję zaczyna się on na godzinie ósmej w tablicy
