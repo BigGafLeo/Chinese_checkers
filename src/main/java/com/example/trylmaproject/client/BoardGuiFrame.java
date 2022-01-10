@@ -206,6 +206,12 @@ public class BoardGuiFrame extends JFrame
 		scoreTable[homManyPlayers] = losser;
 		JOptionPane.showMessageDialog(this, "Koniec gry\n" + scoreTableToString());
 	}
+
+
+	/**
+	 * @param place miejsce na podium
+	 * @return nazwa gracza na konkretnym miejscu
+	 */
 	public String getPlace(int place)
 	{
 		if(place<=players.length)
@@ -213,6 +219,10 @@ public class BoardGuiFrame extends JFrame
 		else return null;
 	}
 
+
+	/**
+	 * @return Wypisanie graczy, w jakiej kolejności zajęli miejsca
+	 */
 	public String scoreTableToString()
 	{
 		String temp = "";
