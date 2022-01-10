@@ -160,7 +160,7 @@ public class Game implements Runnable{
             }
             IS_ABLE_TO_START = true;
             for(PlayerThread thread : players){
-                if(thread != null && thread.IS_ACTIVE){
+                if(thread != null && !thread.isWinner() && thread.IS_ACTIVE){
                     if(!thread.IS_WAITING) {
                         IS_ABLE_TO_START = false;
                         break;
@@ -367,7 +367,7 @@ public class Game implements Runnable{
         }
 
         /**
-         * Metoda typu void, która pozwala na wykonanie tury
+         * Metoda typu boolowskiego, która pozwala na wykonanie tury
          * w komunikacji klient serwer
          * @param in - wejście komunikacji
          * @param oos - strumień wyjścia komunikacji

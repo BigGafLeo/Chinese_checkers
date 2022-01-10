@@ -15,6 +15,10 @@ public class Board {
      */
     public final int W = 25, H = 17;
     public static final int MAX_PLAYERS = 6, STARTING_POINTS = 10;
+
+    /**
+     * Wymiary lewej strony tablicy
+     */
     public final int[] DIMENSION = {12, 11, 10, 9, 0, 1, 2, 3, 4, 3, 2, 1, 0, 9, 10, 11, 12};
 
     /**
@@ -68,7 +72,6 @@ public class Board {
      * @param endX   współrzędna x końcowej pozycji pionka na tablicy
      * @param endY   współrzędna y końcowej pozycji pionka na tablicy
      * @throws IllegalMoveException
-     * @see <a href="https://www.wikihow.com/Play-Chinese-Checkers"">www.wikihow.com/Play-Chinese-Checkers</a>
      */
     public void doMove(int player, int startX, int startY, int endX, int endY) throws IllegalMoveException {
 
