@@ -71,6 +71,7 @@ public class QueFrame extends JFrame {
 
         //Przygotowanie pola, w którym gracz wpisuje swoją nazwę
         playerName = new JTextField();
+        playerName.setText("");
         playerName.setEditable(true);
         quePanel.add(playerName);
 
@@ -105,7 +106,10 @@ public class QueFrame extends JFrame {
         checkName.addActionListener(event ->
         {
             nameToServer = playerName.getText();
+            if(nameToServer.equals(""))
+                nameToServer = "Gracz " + playerNumber;
             nameReadyToSend = true;
+
             synchronized (this){
                 notify();
             }

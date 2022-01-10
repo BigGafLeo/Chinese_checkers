@@ -1,11 +1,10 @@
 package com.example.trylmaproject.server;
 
-import java.awt.geom.Ellipse2D;
 import java.io.Serializable;
 
 
 /**
- * Klasa przechowująca informacje o pojedynczym polu na planszy
+ * Klasa przechowująca informacje o pojedynczym polu logicznym na planszy
  * do gry w chińskie warcaby
  * @author Mateusz Teplicki, Karol Dzwonkowski
  */
@@ -15,12 +14,6 @@ public class Field implements Serializable {
      * Który gracz okupuje dane pole w grze
      */
     private Pawn pawn = null;
-
-    /**
-     * Kółko, które będzie rysowane w GUI
-     */
-    private Ellipse2D.Double circle;
-    public static int DEFAULT_RADIUS = 40;
 
     /**
      * Zwaraca numer gracza, który okupuje dane stanowisko
@@ -45,16 +38,6 @@ public class Field implements Serializable {
 
     public Pawn getPawn(){
         return pawn;
-    }
-
-    public Ellipse2D.Double fieldDrawing(double posy, double posx)
-    {
-        circle = new Ellipse2D.Double(posx,posy,DEFAULT_RADIUS,DEFAULT_RADIUS);
-        return circle;
-    }
-    public Ellipse2D.Double getCircle()
-    {
-        return circle;
     }
 
 }

@@ -1,17 +1,18 @@
 package com.example.trylmaproject.client;
 
 import com.example.trylmaproject.server.Field;
-import com.example.trylmaproject.server.Game;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
+
+import static com.example.trylmaproject.client.DrawnCircles.getDefaultRadius;
+import static com.example.trylmaproject.client.DrawnCircles.setDefaultRadius;
 
 /**
  * Klasa implementująca planszę do grania
@@ -23,8 +24,8 @@ public class BoardGuiPanel extends JPanel
 {
     //Domyślne wymiary planszy
     private int borderSize = 10;
-    public final static int DEFAULT_BOARD_WIDTH = 13 * Field.DEFAULT_RADIUS + 20 + 24;
-    public final static int DEFAULT_BOARD_HEIGHT = 17 * Field.DEFAULT_RADIUS + 20 + 32;
+    public final static int DEFAULT_BOARD_WIDTH = 13 * getDefaultRadius() + 20 + 24;
+    public final static int DEFAULT_BOARD_HEIGHT = 17 * getDefaultRadius() + 20 + 32;
 
     //Tablice zawierające informacje o ruchu wykonanym przez gracza
     private int[] pawnToMove;
@@ -34,8 +35,11 @@ public class BoardGuiPanel extends JPanel
     private boolean isYourTurn = false;
     public boolean moveSignal;
 
-    //Plansza
+    //Plansza logiczna
     Field[][] board;
+
+    //Plansza obiektów rysowanych
+    DrawnCircles[][] drawnBoard;
 
     /**
      * Rozmiar Y dwuwymiarowej tablicy {@link #board}
@@ -66,8 +70,10 @@ public class BoardGuiPanel extends JPanel
     {
         this.board = board;
         this.playerNumber = playerNumber;
-        boardYSize=board.length;
-        boardXSize=board[0].length;
+        drawnBoard = new DrawnCircles[board.length][board[0].length];
+        boardToDrawnBoard(board);
+        boardYSize=drawnBoard.length;
+        boardXSize=drawnBoard[0].length;
 
         //Obliczanie wielkości panelu uzależnione od wielkości okna
         double panelSizeX = (this.getWidth() - borderSize - boardXSize * gapBetweenFields) / 13;
@@ -75,9 +81,9 @@ public class BoardGuiPanel extends JPanel
 
         //Ustawianie wielkości pól uzależnione od wielkości panelu
         if(panelSizeY > panelSizeX)
-            Field.DEFAULT_RADIUS = (int) panelSizeX;
+            setDefaultRadius( (int) panelSizeX);
         else
-            Field.DEFAULT_RADIUS = (int) panelSizeY;
+            setDefaultRadius( (int) panelSizeY);
 
         //Ustawienie podstawowych własności Panelu
         setBackground(Color.WHITE);
@@ -95,7 +101,20 @@ public class BoardGuiPanel extends JPanel
     public void panelRepaint(Field[][] board)
     {
         this.board = board;
+        boardToDrawnBoard(board);
         repaint();
+    }
+    private void boardToDrawnBoard(Field[][] board)
+    {
+        for (int i = 0; i < board.length; i++)
+            for (int j = 0; j < board[0].length; j++)
+            {
+                if(board[i][j] != null)
+                    if(drawnBoard[i][j] == null)
+                        drawnBoard[i][j] = new DrawnCircles(board[i][j].getPlayerNumber());
+                    else
+                        drawnBoard[i][j].setPlayerNumber(board[i][j].getPlayerNumber());
+            }
     }
 
     /**
@@ -110,9 +129,9 @@ public class BoardGuiPanel extends JPanel
 
         //Ustawianie wielkości pól uzależnione od wielkości panelu
         if(panelSizeY > panelSizeX)
-            Field.DEFAULT_RADIUS = (int) panelSizeX;
+            setDefaultRadius( (int) panelSizeX);
         else
-            Field.DEFAULT_RADIUS = (int) panelSizeY;
+            setDefaultRadius( (int) panelSizeY);
         super.paintComponent(g);
 
         //Rysowanie pól planszy oraz pionków
@@ -122,11 +141,11 @@ public class BoardGuiPanel extends JPanel
             {
                 if(board[i][j] != null)
                 {
-                    g2D.draw(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + gapBetweenFields*j + ((double) j)/2*Field.DEFAULT_RADIUS));
-                    if (board[i][j].getPlayerNumber()!=0)
+                    g2D.draw(drawnBoard[i][j].fieldDrawing(borderSize + i*getDefaultRadius(),borderSize + gapBetweenFields*j + ((double) j)/2*getDefaultRadius()));
+                    if (drawnBoard[i][j].getPlayerNumber()!=0)
                     {
-                        g2D.setPaint(colorForPlayer(board[i][j].getPlayerNumber()));
-                        g2D.fill(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + gapBetweenFields*j + ((double) j)/2*Field.DEFAULT_RADIUS));
+                        g2D.setPaint(colorForPlayer(drawnBoard[i][j].getPlayerNumber()));
+                        g2D.fill(drawnBoard[i][j].fieldDrawing(borderSize + i*getDefaultRadius(),borderSize + gapBetweenFields*j + ((double) j)/2*getDefaultRadius()));
                         g2D.setPaint(Color.BLACK);
                     }
                 }
@@ -178,7 +197,7 @@ public class BoardGuiPanel extends JPanel
     {
         for(int i = 0 ; i<17; i++) {
             for (int j = 0 ; j<25; j++) {
-                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == playerNumber)
+                if(drawnBoard[i][j] != null && drawnBoard[i][j].getCircle().contains(point) && drawnBoard[i][j].getPlayerNumber() == playerNumber)
                 {
                     return new int[]{i,j};
                 }
@@ -196,7 +215,7 @@ public class BoardGuiPanel extends JPanel
     {
         for(int i = 0 ; i<17; i++) {
             for (int j = 0 ; j<25; j++) {
-                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() != playerNumber && board[i][j].getPlayerNumber() != 0)
+                if(drawnBoard[i][j] != null && drawnBoard[i][j].getCircle().contains(point) && drawnBoard[i][j].getPlayerNumber() != playerNumber && drawnBoard[i][j].getPlayerNumber() != 0)
                 {
                     return new int[]{i,j};
                 }
@@ -213,7 +232,7 @@ public class BoardGuiPanel extends JPanel
     {
         for(int i = 0 ; i<17; i++)
             for (int j = 0 ; j<25; j++)
-                if(board[i][j] != null && board[i][j].getCircle().contains(point) && board[i][j].getPlayerNumber() == 0)
+                if(drawnBoard[i][j] != null && drawnBoard[i][j].getCircle().contains(point) && drawnBoard[i][j].getPlayerNumber() == 0)
                 {
                     return new int[]{i,j};
                 }
@@ -241,15 +260,22 @@ public class BoardGuiPanel extends JPanel
             if(fieldToMove == null) {
                 if (pawnToMove != null) {
                     fieldToMove = findEmptyField(event.getPoint());
-//                    if(fieldToMove != null) {
-//                        board[fieldToMove[0]][fieldToMove[1]].setPlayerNumber(playerNumber);
-//                    }
-                    motionCircle = null;
-                    repaint();
-                    synchronized (this) {
-                        notifyAll();
+                    if(fieldToMove != null)
+                    {
+                        motionCircle = null;
+                        repaint();
+                        synchronized (this) {
+                            notifyAll();
+                        }
+                        moveSignal = true;
                     }
-                    moveSignal = true;
+                    else
+                    {
+                        drawnBoard[pawnToMove[0]][pawnToMove[1]].setPlayerNumber(playerNumber);
+                        pawnToMove = null;
+                        motionCircle = null;
+                        repaint();
+                    }
                 }
             }
         }
@@ -298,8 +324,8 @@ public class BoardGuiPanel extends JPanel
         {
             if(isYourTurn) {
                 if (pawnToMove != null && fieldToMove == null) {
-                    motionCircle = new Ellipse2D.Double(event.getX()-((double)Field.DEFAULT_RADIUS/2), event.getY()-((double)Field.DEFAULT_RADIUS/2), Field.DEFAULT_RADIUS, Field.DEFAULT_RADIUS);
-                    board[pawnToMove[0]][pawnToMove[1]].setPlayerNumber(0);
+                    motionCircle = new Ellipse2D.Double(event.getX()-((double)getDefaultRadius()/2), event.getY()-((double)getDefaultRadius()/2), getDefaultRadius(), getDefaultRadius());
+                    drawnBoard[pawnToMove[0]][pawnToMove[1]].setPlayerNumber(0);
                     repaint();
                 }
                 if(pawnToMove != null && fieldToMove == null && event.getModifiersEx() == event.MOUSE_RELEASED)
