@@ -404,6 +404,7 @@ public class Game implements Runnable{
                                 if(isWinner()){
                                     announceLastWinner(player.name);
                                     player.IS_WINNER = true;
+                                    endTurn();
                                     return true;
                                 }
                             } else {

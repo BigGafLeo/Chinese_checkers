@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="40.0" y="-34.5">com</node>
+    <node x="4105.5" y="-34.5">netscape</node>
+    <node x="3925.0" y="-34.5">ClientMockTest</node>
+    <node x="3282.0" y="-34.5">toolbarButtonGraphics</node>
+    <node x="3122.0" y="-34.5">BoardTest</node>
+    <node x="2963.0" y="-34.5">sun</node>
+    <node x="2438.5" y="-34.5">ClientMock</node>
+    <node x="2202.0" y="-34.5">groovyjarjarasm</node>
+    <node x="2041.5" y="-34.5">java</node>
+    <node x="1478.0" y="-34.5">javax</node>
+    <node x="192.5" y="-34.5">ServerMock.PlayerThread</node>
+    <node x="1234.5" y="-34.5">groovyjarjarpicocli</node>
+    <node x="767.5" y="-34.5">QueFrameTest</node>
+    <node x="596.0" y="-34.5">javafx</node>
+    <node x="4471.0" y="-34.5">images</node>
+    <node x="3722.5" y="-34.5">ServerMockTest</node>
+    <node x="4291.0" y="-34.5">ServerMock.PlayerCreator</node>
+    <node x="3563.0" y="-34.5">org</node>
+    <node x="2804.5" y="-34.5">jdk</node>
+    <node x="2601.0" y="-34.5">META-INF</node>
+    <node x="1871.0" y="-34.5">groovy</node>
+    <node x="1651.0" y="-34.5">BoardGuiFrameTest</node>
+    <node x="196.0" y="-174.5">ServerMock</node>
+    <node x="956.5" y="-34.5">groovyjarjarcommonscli</node>
+    <node x="361.0" y="-34.5">groovyjarjarantlr</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="ServerMock.PlayerCreator" target="ServerMock" relationship="INNER_CLASS">
+      <point x="0.0" y="-14.5" />
+      <point x="4360.0" y="-80.0" />
+      <point x="260.0" y="-80.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="ServerMock.PlayerThread" target="ServerMock" relationship="INNER_CLASS">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.22902593157550666" showDependencies="true" x="2324.5" y="-90.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
