@@ -37,6 +37,20 @@ public class BoardGuiPanel extends JPanel
     //Plansza
     Field[][] board;
 
+    /**
+     * Rozmiar Y dwuwymiarowej tablicy {@link #board}
+     */
+    private int boardYSize;
+    /**
+     * Rozmiar X dwuwymiarowej tablicy {@link #board}
+     */
+    private int boardXSize;
+
+    /**
+     * Przerwa w pikselach pomiędzy sąsiednimi polami w poziomie
+     */
+    private int gapBetweenFields = 2;
+
     //Numer gracza, dla którego rysowana jest plansza
     private int playerNumber;
 
@@ -52,10 +66,12 @@ public class BoardGuiPanel extends JPanel
     {
         this.board = board;
         this.playerNumber = playerNumber;
+        boardYSize=board.length;
+        boardXSize=board[0].length;
 
         //Obliczanie wielkości panelu uzależnione od wielkości okna
-        double panelSizeX = this.getWidth() / 13 + 24 + borderSize;
-        double panelSizeY = this.getHeight() / 17 + 32 + borderSize;
+        double panelSizeX = (this.getWidth() - borderSize - boardXSize * gapBetweenFields) / 13;
+        double panelSizeY = (this.getHeight() - borderSize) / 17;
 
         //Ustawianie wielkości pól uzależnione od wielkości panelu
         if(panelSizeY > panelSizeX)
@@ -89,28 +105,28 @@ public class BoardGuiPanel extends JPanel
     public void paintComponent(Graphics g)
     {
         //Obliczanie wielkości panelu uzależnione od wielkości okna
-        double panelSizeX = this.getWidth()/ 13;
-        double panelSizeY = this.getHeight() / 17;
+        double panelSizeX = (this.getWidth() - borderSize - boardXSize * gapBetweenFields) / 13;
+        double panelSizeY = (this.getHeight() - borderSize) / 17;
 
         //Ustawianie wielkości pól uzależnione od wielkości panelu
         if(panelSizeY > panelSizeX)
-            Field.DEFAULT_RADIUS = (int) panelSizeX -2;
+            Field.DEFAULT_RADIUS = (int) panelSizeX;
         else
             Field.DEFAULT_RADIUS = (int) panelSizeY;
         super.paintComponent(g);
 
         //Rysowanie pól planszy oraz pionków
         Graphics2D g2D = (Graphics2D) g;
-        for(int i = 0; i<17;i++)
-            for(int j = 0; j<25;j++)
+        for(int i = 0; i< boardYSize;i++)
+            for(int j = 0; j< boardXSize;j++)
             {
                 if(board[i][j] != null)
                 {
-                    g2D.draw(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
+                    g2D.draw(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + gapBetweenFields*j + ((double) j)/2*Field.DEFAULT_RADIUS));
                     if (board[i][j].getPlayerNumber()!=0)
                     {
                         g2D.setPaint(colorForPlayer(board[i][j].getPlayerNumber()));
-                        g2D.fill(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + 2*j + ((double) j)/2*Field.DEFAULT_RADIUS));
+                        g2D.fill(board[i][j].fieldDrawing(borderSize + i*Field.DEFAULT_RADIUS,borderSize + gapBetweenFields*j + ((double) j)/2*Field.DEFAULT_RADIUS));
                         g2D.setPaint(Color.BLACK);
                     }
                 }
