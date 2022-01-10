@@ -203,13 +203,22 @@ public class BoardGuiFrame extends JFrame
 	public void endGame(String losser)
 	{
 		scoreTable[homManyPlayers] = losser;
-		JOptionPane.showConfirmDialog(this, "Koniec gry\n 1." + scoreTable.toString());
+		JOptionPane.showMessageDialog(this, "Koniec gry\n 1." + scoreTable.toString());
 	}
 	public String getPlace(int place)
 	{
 		if(place<=players.length)
 			return scoreTable[place - 1];
 		else return null;
+	}
+
+	public String scoreTableToString()
+	{
+		String temp = new String();
+		for (String s: scoreTable) {
+			temp.concat(s);
+		}
+		return temp;
 	}
 
 	/**
