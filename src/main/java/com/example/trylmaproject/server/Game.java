@@ -319,6 +319,12 @@ public class Game implements Runnable{
             IS_YOUR_TURN = false;
         }
 
+        /**
+         * Początkowa komunikacja pomiędzy klientem a serwerem
+         * @param in - wejście komunikacji
+         * @param oos - strumień wyjścia komunikacji
+         * @throws IOException
+         */
         public void prepareForGame(Scanner in, ObjectOutputStream oos) throws IOException{
             //Wyślij numer gracza klientowi
             String line = "NUMER: " + player.number;
@@ -360,8 +366,15 @@ public class Game implements Runnable{
             }
         }
 
+        /**
+         * Metoda typu void, która pozwala na wykonanie tury
+         * w komunikacji klient serwer
+         * @param in - wejście komunikacji
+         * @param oos - strumień wyjścia komunikacji
+         * @return czy gracz w tej turze zakończył swoją grę
+         * @throws IOException
+         */
         private boolean makeTurn(Scanner in, ObjectOutputStream oos) throws IOException{
-                waitForNewTurn();
 
                 //Wyślij klientowi tablicę Field[][] do wyrysowania i wyczyść pamięć
                 //podręczną
@@ -443,6 +456,7 @@ public class Game implements Runnable{
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 prepareForGame(in, oos);
                 while(true){
+                    waitForNewTurn();
                     if(makeTurn(in, oos)){
                         break;
                     }
