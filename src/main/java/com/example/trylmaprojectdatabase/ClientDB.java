@@ -1,12 +1,17 @@
-package com.example.trylmaproject.client;
+package com.example.trylmaprojectdatabase;
 
+import com.example.trylmaproject.client.BoardGuiFrame;
+import com.example.trylmaproject.client.Client;
+import com.example.trylmaproject.client.QueFrame;
 import com.example.trylmaproject.server.Field;
 import com.example.trylmaproject.server.Player;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Client implements Runnable{
+public class ClientDB implements Runnable{
     private String serverAddress;
     private PrintWriter out;
     private ObjectInputStream ois;
@@ -16,7 +21,7 @@ public class Client implements Runnable{
     private int playerNumber;
     private int port;
 
-    public Client(String serverAddress, int port)
+    public ClientDB(String serverAddress, int port)
     {
         this.serverAddress = serverAddress;
         this.port = port;
@@ -122,7 +127,7 @@ public class Client implements Runnable{
     }
 
     public static void main(String[] args) {
-        Client client = new Client("localhost", 58090);
+        com.example.trylmaproject.client.Client client = new com.example.trylmaproject.client.Client("localhost", 58090);
         client.run();
     }
 }

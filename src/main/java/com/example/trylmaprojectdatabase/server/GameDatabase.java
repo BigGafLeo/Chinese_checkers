@@ -76,6 +76,22 @@ public class GameDatabase extends Game {
             String line = "NUMER: " + player.number;
             oos.writeObject(line);
 
+            String message;
+            if(player.number == 1){
+                do{
+                    message = in.nextLine();
+                } while(message != null)
+                if(message.equals("WCZYTAJ_GRĘ")){
+                    oos.writeObject();//tablica id_gry, liczba_ruchów
+                    message = in.nextLine();
+                    message = in.nextLine();
+                    //SELECT ... WHERE id_gry = message
+                }
+            }
+
+            String line = "NUMER: " + player.number;
+            oos.writeObject(line);
+
             //TODO obsługa niepopranych imion w kliencie
             //Pobierz imię od gracza
             do {
