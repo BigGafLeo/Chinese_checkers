@@ -43,6 +43,8 @@ public class ClientDB implements Runnable{
 
             if(playerNumber == 1)
             {
+                int[][] table = (int[][]) ois.readObject();
+                startingFrame = new StartingFrame(table);
                 startingFrameCreation();
                 while(true)
                 {
@@ -161,7 +163,7 @@ public class ClientDB implements Runnable{
     }
 
     public static void main(String[] args) {
-        com.example.trylmaproject.client.Client client = new com.example.trylmaproject.client.Client("localhost", 58090);
+        ClientDB client = new ClientDB("localhost", 58090);
         client.run();
     }
 }

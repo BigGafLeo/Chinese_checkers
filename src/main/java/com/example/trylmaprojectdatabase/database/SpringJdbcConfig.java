@@ -92,7 +92,8 @@ public class SpringJdbcConfig {
     }
 
     public int[][] getTable(String sql){
-        return jdbcTemplate.queryForObject(sql, new TableMapper());
+        int[][] test = jdbcTemplate.queryForObject(sql, new TableMapper());
+        return test;
     }
 
 

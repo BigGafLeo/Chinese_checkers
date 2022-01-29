@@ -84,15 +84,18 @@ public class GameDatabase extends Game {
                 return;
             }
 
-            while(typeOfGame == 0){
-                synchronized (this){
-                    try {
-                        wait(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+            if(localNumber > 1){
+                while(typeOfGame == 0){
+                    synchronized (this){
+                        try {
+                            wait(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+
 
             if(typeOfGame == LOADED_GAME && localNumber > maxPlayersInLoadedGame){
                 IS_ACTIVE = false;
@@ -133,12 +136,12 @@ public class GameDatabase extends Game {
 
             String message;
             if(player.number == 1){
+                oos.writeObject(jdbc.getTable("SELECT id_gry, liczba_ruchów FROM gra"));//tablica id_gry, liczba_ruchów
                 do{
                     message = in.nextLine();
                 } while(message != null);
                 if(message.equals("WCZYTAJ_GRĘ")){
                     typeOfGame = LOADED_GAME;
-                    oos.writeObject(jdbc.getTable("SELECT id_gry, liczba_ruchów FROM gra"));//tablica id_gry, liczba_ruchów
                     var id = in.nextLine();
                     var moveNumber = in.nextLine();
                     try {

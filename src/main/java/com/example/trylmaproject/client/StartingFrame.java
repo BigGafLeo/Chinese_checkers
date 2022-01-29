@@ -44,6 +44,8 @@ public class StartingFrame extends JFrame
 		replayGame.addActionListener(event->{
 			changePanel();
 		});
+		panel.add(replayGame);
+		pack();
 
 	}
 	private void changePanel()
