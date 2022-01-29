@@ -38,7 +38,7 @@ public class GameDatabase extends Game {
             @Override
             public void run() {
                 ExecutorService threads = Executors.newFixedThreadPool(6);
-                while(playerNumber< board.MAX_PLAYERS && !GAME_STARTED){
+                while(playerNumber< Board.MAX_PLAYERS && !GAME_STARTED){
                     //Czekanie na graczy i dodawanie ich do tablicy
                     try {
                         threads.execute(players[playerNumber] = new PlayerThreadDB(serverSocket.accept(), ++playerNumber));
@@ -88,7 +88,7 @@ public class GameDatabase extends Game {
             if(player.number == 1){
                 while(true){
                     line = in.nextLine();
-                    //Jeśli komunikat to nie start, albo liczba graczy jest niepoprawna
+                    //Jeśli komunikat to nie start albo liczba graczy jest niepoprawna
                     //(inna niż 2, 3, 4 lub 6), zwróć klientowi sygnał "JESZCZE_RAZ"
                     if(!line.equals("START") || playerNumber < 2  || playerNumber == 5  || playerNumber > 6 ){
                         oos.writeObject("JESZCZE_RAZ");
