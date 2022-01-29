@@ -139,7 +139,7 @@ public class GameDatabase extends Game {
                 oos.writeObject(jdbc.getTable("SELECT id_gry, liczba_ruchów FROM gra"));//tablica id_gry, liczba_ruchów
                 do{
                     message = in.nextLine();
-                } while(message != null);
+                } while(message == null);
                 if(message.equals("WCZYTAJ_GRĘ")){
                     typeOfGame = LOADED_GAME;
                     var id = in.nextLine();
