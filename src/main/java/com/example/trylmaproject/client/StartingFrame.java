@@ -19,12 +19,18 @@ public class StartingFrame extends JFrame
 
 	private int[][] games;
 
+	int DEFAULT_WIDTH = 400;
+	int DEFAULT_HEIGHT = 200;
+
 
 	public StartingFrame(int[][] games)
 	{
 		this.games = games;
+		this.setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
+		this.setResizable(false);
 		setStartReplay();
 		this.getContentPane().add(this.panel);
+		pack();
 	}
 	private void setStartReplay()
 	{
@@ -45,8 +51,6 @@ public class StartingFrame extends JFrame
 			changePanel();
 		});
 		panel.add(replayGame);
-		pack();
-
 	}
 	private void changePanel()
 	{
@@ -61,20 +65,26 @@ public class StartingFrame extends JFrame
 		gameId = new JComboBox<>();
 		gameId.setEditable(false);
 
-		for (int i: games[0]) {
-			gameId.addItem(i);
-		}
+		for(int i = 0; i < games.length;i++)
+			gameId.addItem(games[i][0]);
+		gameId.setSelectedItem(null);
 
 		gameId.addActionListener(e -> {
+		roundId.removeAllItems();
 			for(int i = 0; i<games.length;i++)
-				if(games[0] == gameId.getSelectedItem())
-					roundId.addItem(games[1][i]);
+				if(games[i][0] == (int)gameId.getSelectedItem()) {
+					for (int j = 0; j <= games[i][1]; j++)
+						roundId.addItem(j);
+					break;
+				}
+		});
+		roundId.addActionListener(e -> {
 			startReplay.setEnabled(true);
 		});
 
-		littlePanel.add(new JTextField("Id gry:"));
+		littlePanel.add(new JLabel("Id gry:"));
 		littlePanel.add(gameId);
-		littlePanel.add(new JTextField("Id ruchu"));
+		littlePanel.add(new JLabel("Id ruchu"));
 		littlePanel.add(roundId);
 
 		panel.setLayout(new GridLayout(2,1));
@@ -89,6 +99,8 @@ public class StartingFrame extends JFrame
 			}
 		});
 		panel.add(startReplay);
+		pack();
+		repaint();
 	}
 	public int getTypeOfGame()
 	{
