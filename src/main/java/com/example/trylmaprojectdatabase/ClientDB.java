@@ -25,6 +25,7 @@ public class ClientDB implements Runnable{
     private int port;
 
 
+
     public ClientDB(String serverAddress, int port)
     {
         this.serverAddress = serverAddress;
@@ -91,7 +92,6 @@ public class ClientDB implements Runnable{
 
 
             while (true) {
-
                 board = (Field[][])ois.readObject();
                 if(boardGuiFrame == null){
                     queFrame.setVisible(false);
@@ -114,16 +114,6 @@ public class ClientDB implements Runnable{
                 if(line.equals("KOLEJKA: TAK")){
                     boardGuiFrame.setTurn(true);
                     while(true){
-
-//                        synchronized (boardGuiFrame){
-//                            try {
-//                                boardGuiFrame.wait();
-//                                line = boardGuiFrame.getMessage();
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-
                         line = boardGuiFrame.getMessage();
                         if(line.equals("BREAK")){
                             boardGuiFrame.setTurn(false);

@@ -16,14 +16,14 @@ public class TableMapper implements RowMapper<int[][]> {
         int cols = rsmd.getColumnCount();
         ArrayList<int[]> array = new ArrayList<>();
         int i = 0;
-        while(rs.next()){
-            i++;
+        do{
             int[] temp = new int[cols];
             array.add(temp);
-            for(int j = 1; j<=cols; j++){
-                array.get(i-1)[j-1] = rs.getInt(j);
+            for(int j = 0; j<cols; j++){
+                array.get(i)[j] = rs.getInt(j+1);
             }
-        }
+            i++;
+        } while(rs.next());
         table = new int[i][cols];
         array.toArray(table);
         return table;
