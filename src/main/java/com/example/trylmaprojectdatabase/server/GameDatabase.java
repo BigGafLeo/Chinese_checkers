@@ -184,10 +184,12 @@ public class GameDatabase extends Game {
                 GAME_STARTED = true;
 
                 //Tworzenie nowej planszy
-                try{board = new Board(playerNumber);}
-                catch (IllegalNumberOfPlayers i){
-                    i.printStackTrace();
-                }
+                if(board == null)
+                    try{board = new Board(playerNumber);}
+                    catch (IllegalNumberOfPlayers i){
+                        i.printStackTrace();
+                    }
+
                 //Obudź administratora, który jest zablokowany wait() w metodzie run()
                 synchronized(GameDatabase.this){
                     GameDatabase.this.notify();
