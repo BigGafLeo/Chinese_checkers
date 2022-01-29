@@ -3,6 +3,7 @@ package com.example.trylmaprojectdatabase;
 import com.example.trylmaproject.client.BoardGuiFrame;
 import com.example.trylmaproject.client.Client;
 import com.example.trylmaproject.client.QueFrame;
+import com.example.trylmaproject.client.StartingFrame;
 import com.example.trylmaproject.server.Field;
 import com.example.trylmaproject.server.Player;
 
@@ -16,10 +17,12 @@ public class ClientDB implements Runnable{
     private PrintWriter out;
     private ObjectInputStream ois;
     public QueFrame queFrame;
+    public StartingFrame startingFrame;
     public BoardGuiFrame boardGuiFrame;
     private Field[][] board;
     private int playerNumber;
     private int port;
+
 
     public ClientDB(String serverAddress, int port)
     {
@@ -36,6 +39,27 @@ public class ClientDB implements Runnable{
             var line = (String)ois.readObject();
             if(line.startsWith("NUMER: "))
                 playerNumber = Integer.parseInt(line.substring(7));
+
+            if(playerNumber == 1)
+            {
+                startingFrameCreation();
+                while(true)
+                {
+                    if(startingFrame.isReadyOldGame())
+                    {
+                        out.println(startingFrame.getGameId());
+                        out.println(startingFrame.getRoundId());
+                        startingFrame.setVisible(false);
+                        break;
+                    }
+                    else if(startingFrame.isReadyNewGame())
+                    {
+                        startingFrame.setVisible(false);
+                        break;
+                    }
+                }
+            }
+
             queFrame = new QueFrame(playerNumber);
             queFrameCreaction();
             do{}
@@ -124,6 +148,13 @@ public class ClientDB implements Runnable{
         queFrame.setTitle("Kolejka gracz: "+ playerNumber);
         queFrame.setVisible(true);
         queFrame.setLocationRelativeTo(null);
+    }
+    public void startingFrameCreation()
+    {
+        startingFrame.setDefaultCloseOperation(3);
+        startingFrame.setTitle("Kontynuuj czy rozpocznij nową grę?");
+        startingFrame.setVisible(true);
+        startingFrame.setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
