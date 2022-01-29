@@ -247,9 +247,9 @@ public class Game implements Runnable{
 
     protected class PlayerThread implements Runnable{
 
-        private final Socket socket;
+        protected final Socket socket;
         protected String lastWinner = "";
-        private int localNumber;
+        protected int localNumber;
         public boolean IS_ACTIVE = true;
         protected boolean IS_YOUR_TURN = false;
         private boolean IS_WAITING = false;
