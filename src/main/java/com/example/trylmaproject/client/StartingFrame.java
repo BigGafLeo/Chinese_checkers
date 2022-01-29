@@ -115,13 +115,6 @@ public class StartingFrame extends JFrame
 	}
 	public int getGameId()
 	{
-		synchronized (this){
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		return (int)gameId.getSelectedItem();
 	}
 	public int getRoundId()
