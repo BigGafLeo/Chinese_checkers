@@ -6,8 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
-import javax.swing.*;
-import java.beans.JavaBean;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,5 +90,11 @@ public class SpringJdbcConfig {
         var query = "SELECT id_gracza, start_x, start_y, end_x, end_y FROM ruch WHERE id_gry = ? ORDER BY id_ruchu ASC LIMIT ?";
         return jdbcTemplate.queryForObject(query, new Object[]{id_gry, ruch}, new BoardRowMapper(numberOfPlayers));
     }
+
+    public int[][] getTable(String sql){
+        return jdbcTemplate.queryForObject(sql, new TableMapper());
+    }
+
+
 }
 

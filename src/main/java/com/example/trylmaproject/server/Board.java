@@ -170,6 +170,10 @@ public class Board {
         return true;
     }
 
+    public int getNumberOfPlayers(){
+        return numberOfPlayers;
+    }
+
     /**
      * Dodaje do tablicy {@link #startingFields} pola, w który gracze zaczynają
      * i kończą grę. Na tablicy {@link #board} ma on ksztalt piramidy

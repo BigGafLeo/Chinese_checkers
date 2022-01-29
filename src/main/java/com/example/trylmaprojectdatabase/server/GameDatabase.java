@@ -4,6 +4,7 @@ import com.example.trylmaproject.exceptions.IllegalMoveException;
 import com.example.trylmaproject.exceptions.IllegalNumberOfPlayers;
 import com.example.trylmaproject.server.Board;
 import com.example.trylmaproject.server.Game;
+import com.example.trylmaproject.server.Player;
 import com.example.trylmaprojectdatabase.database.SpringJdbcConfig;
 
 import java.io.IOException;
@@ -15,8 +16,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class GameDatabase extends Game {
+    private int typeOfGame = 0;
+    public static final int NEW_GAME = 1;
+    public static final int LOADED_GAME = 2;
     protected SpringJdbcConfig jdbc;
     protected int id_gry;
+    private int maxPlayersInLoadedGame;
 
     /**
      * @param serverSocketNumber port, na którym będzie działać serwer
@@ -71,6 +76,56 @@ public class GameDatabase extends Game {
             super(socket,number);
         }
 
+        @Override
+        public void run() {
+            //Jeśli gra się zaczęła, nie pozwalaj na start kolejnych wątków
+            if(GAME_STARTED) {
+                IS_ACTIVE = false;
+                return;
+            }
+
+            while(typeOfGame == 0){
+                synchronized (this){
+                    try {
+                        wait(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if(typeOfGame == LOADED_GAME && localNumber > maxPlayersInLoadedGame){
+                IS_ACTIVE = false;
+                return;
+            }
+
+            try{
+                player = new Player();
+                player.number = localNumber;
+                Scanner in = new Scanner(socket.getInputStream());
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                prepareForGame(in, oos);
+                while(true){
+                    waitForNewTurn();
+                    if(makeTurn(in, oos)){
+                        break;
+                    }
+                }
+            }
+            catch(IOException exception){
+                exception.printStackTrace();
+            }
+        }
+
+        private boolean isAbleToStart(){
+            if(typeOfGame == LOADED_GAME){
+                if(playerNumber >= maxPlayersInLoadedGame) return true;
+                else return false;
+            }
+            if(playerNumber < 2  || playerNumber == 5  || playerNumber > 6) return false;
+            return true;
+        }
+
         public void prepareForGame(Scanner in, ObjectOutputStream oos) throws IOException{
             //Wyślij numer gracza klientowi
             String line = "NUMER: " + player.number;
@@ -80,17 +135,24 @@ public class GameDatabase extends Game {
             if(player.number == 1){
                 do{
                     message = in.nextLine();
-                } while(message != null)
+                } while(message != null);
                 if(message.equals("WCZYTAJ_GRĘ")){
-                    oos.writeObject();//tablica id_gry, liczba_ruchów
-                    message = in.nextLine();
-                    message = in.nextLine();
-                    //SELECT ... WHERE id_gry = message
+                    typeOfGame = LOADED_GAME;
+                    oos.writeObject(jdbc.getTable("SELECT id_gry, liczba_ruchów FROM gra"));//tablica id_gry, liczba_ruchów
+                    var id = in.nextLine();
+                    var moveNumber = in.nextLine();
+                    try {
+                        board = jdbc.getSavedBoard(Integer.parseInt(id), Integer.parseInt(moveNumber));
+                    } catch (IllegalNumberOfPlayers e) {
+                        e.printStackTrace();
+                    }
+                    maxPlayersInLoadedGame = board.getNumberOfPlayers();
                 }
-            }
+                else{
+                    typeOfGame = NEW_GAME;
+                }
 
-            String line = "NUMER: " + player.number;
-            oos.writeObject(line);
+            }
 
             //TODO obsługa niepopranych imion w kliencie
             //Pobierz imię od gracza
@@ -106,7 +168,7 @@ public class GameDatabase extends Game {
                     line = in.nextLine();
                     //Jeśli komunikat to nie start albo liczba graczy jest niepoprawna
                     //(inna niż 2, 3, 4 lub 6), zwróć klientowi sygnał "JESZCZE_RAZ"
-                    if(!line.equals("START") || playerNumber < 2  || playerNumber == 5  || playerNumber > 6 ){
+                    if(!line.equals("START") || !isAbleToStart()){
                         oos.writeObject("JESZCZE_RAZ");
                     }
                     else{
