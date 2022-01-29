@@ -10,8 +10,8 @@ public class Client implements Runnable{
     String serverAddress;
     PrintWriter out;
     ObjectInputStream ois;
-    QueFrame queFrame;
-    BoardGuiFrame boardGuiFrame;
+    public QueFrame queFrame;
+    public BoardGuiFrame boardGuiFrame;
     Field[][] board;
     int playerNumber;
     int port;
@@ -113,7 +113,7 @@ public class Client implements Runnable{
             e.printStackTrace();
         }
     }
-    private void queFrameCreaction()
+    public void queFrameCreaction()
     {
         queFrame.setDefaultCloseOperation(3);
         queFrame.setTitle("Kolejka gracz: "+ playerNumber);
@@ -122,7 +122,7 @@ public class Client implements Runnable{
     }
 
     public static void main(String[] args) {
-        Client client = new Client("localhost", 59090);
+        Client client = new Client("localhost", 58090);
         client.run();
     }
 }

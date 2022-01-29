@@ -19,31 +19,31 @@ import java.util.concurrent.Executors;
  */
 public class Game implements Runnable{
 
-    private final ServerSocket serverSocket;
+    protected final ServerSocket serverSocket;
 
     /**
      * Tablica wątków obsługujących poszczególnych graczy
      */
-    private final PlayerThread[] players = new PlayerThread[Board.MAX_PLAYERS];
+    protected final PlayerThread[] players = new PlayerThread[Board.MAX_PLAYERS];
 
     /**
      * Model do gry w chińskie warcaby (patrz: MVC)
      */
-    private Board board;
+    protected Board board;
 
     /**
      * Licznik graczy, którzy dołączyli do gry
      */
-    private volatile int playerNumber = 0;
+    protected volatile int playerNumber = 0;
 
-    private boolean GAME_STARTED = false;
+    protected boolean GAME_STARTED = false;
 
-    private boolean GAME_ENDED = false;
+    protected boolean GAME_ENDED = false;
 
     /**
      * Zmienna wskazująca na gracza o danym numerze, który ma teraz ruch
      */
-    private int whoseTurn = 0;
+    protected int whoseTurn = 0;
 
     /**
      * Ilu graczy jeszcze nie wygrało
@@ -214,7 +214,7 @@ public class Game implements Runnable{
      *
      * @param name
      */
-    void announceLastWinner(String name){
+    protected void announceLastWinner(String name){
         for(PlayerThread player : players){
             if(player != null && player.IS_ACTIVE) player.lastWinner = name;
         }
@@ -226,7 +226,7 @@ public class Game implements Runnable{
      * Klasa, która obsługuje dodawanie graczy w nowym wątku
      * @author Mateusz Teplicki, Karol Dzwonkowski
      */
-    class PlayerCreator implements Runnable{
+    protected class PlayerCreator implements Runnable{
 
         @Override
         public void run() {
@@ -245,15 +245,15 @@ public class Game implements Runnable{
 
     //-------------------------------------------------------------------------------------------//
 
-    class PlayerThread implements Runnable{
+    protected class PlayerThread implements Runnable{
 
         private final Socket socket;
-        private String lastWinner;
+        protected String lastWinner = "";
         private int localNumber;
         public boolean IS_ACTIVE = true;
-        private boolean IS_YOUR_TURN = false;
+        protected boolean IS_YOUR_TURN = false;
         private boolean IS_WAITING = false;
-        private Player player;
+        protected Player player;
 
         //-------------------------------------------------------------------------------------------//
 
@@ -262,7 +262,7 @@ public class Game implements Runnable{
          * @param socket socket do komunikacji z klientem
          * @param number numer gracza przydzielony przez serwer
          */
-        PlayerThread(Socket socket, int number){
+        protected PlayerThread(Socket socket, int number){
             this.socket = socket;
             localNumber = number;
         }
@@ -374,7 +374,7 @@ public class Game implements Runnable{
          * @return czy gracz w tej turze zakończył swoją grę
          * @throws IOException
          */
-        private boolean makeTurn(Scanner in, ObjectOutputStream oos) throws IOException{
+        protected boolean makeTurn(Scanner in, ObjectOutputStream oos) throws IOException{
 
                 //Wyślij klientowi tablicę Field[][] do wyrysowania i wyczyść pamięć
                 //podręczną

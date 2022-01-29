@@ -2,6 +2,7 @@ import com.example.trylmaproject.client.Client;
 import com.example.trylmaproject.server.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -18,9 +19,7 @@ public class ServerMockTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Client client1, client2;
-        threads.execute((client1 = new Client("localhost", 59092)));
-        client2 = new Client("localhost", 59092);
-        client2.run();
+        threads.execute(new Client("localhost", 59092));
+        new Client("localhost", 59092).run();
     }
 }
