@@ -1,5 +1,7 @@
 package com.example.trylmaproject.client;
 
+import com.example.trylmaprojectdatabase.server.GameDatabase;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,8 +15,7 @@ public class StartingFrame extends JFrame
 	private JComboBox<Integer> gameId;
 	private JComboBox<Integer> roundId;
 
-	private boolean newGame = false;
-	private boolean oldGame = false;
+	private int typeOfGame = 0;
 
 	private int[][] games;
 
@@ -32,7 +33,7 @@ public class StartingFrame extends JFrame
 
 		playNewGame = new JButton("Zagraj nową grę");
 		playNewGame.addActionListener(e -> {
-			newGame = true;
+			typeOfGame = GameDatabase.NEW_GAME;
 			synchronized (this) {
 				notify();
 			}
@@ -66,6 +67,7 @@ public class StartingFrame extends JFrame
 			for(int i = 0; i<games.length;i++)
 				if(games[0] == gameId.getSelectedItem())
 					roundId.addItem(games[1][i]);
+			startReplay.setEnabled(true);
 		});
 
 		littlePanel.add(new JTextField("Id gry:"));
@@ -77,24 +79,35 @@ public class StartingFrame extends JFrame
 		panel.add(littlePanel);
 
 		startReplay = new JButton("Kontynuuj grę");
+		startReplay.setEnabled(false);
 		startReplay.addActionListener(e -> {
-			oldGame = true;
+			typeOfGame = GameDatabase.LOADED_GAME;
 			synchronized (this) {
 				notify();
 			}
 		});
 		panel.add(startReplay);
 	}
-	public boolean isReadyNewGame()
+	public int getTypeOfGame()
 	{
-		return newGame;
-	}
-	public boolean isReadyOldGame()
-	{
-		return oldGame;
+		synchronized (this){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return typeOfGame;
 	}
 	public int getGameId()
 	{
+		synchronized (this){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		return (int)gameId.getSelectedItem();
 	}
 	public int getRoundId()

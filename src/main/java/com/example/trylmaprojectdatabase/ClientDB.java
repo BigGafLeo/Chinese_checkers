@@ -6,6 +6,7 @@ import com.example.trylmaproject.client.QueFrame;
 import com.example.trylmaproject.client.StartingFrame;
 import com.example.trylmaproject.server.Field;
 import com.example.trylmaproject.server.Player;
+import com.example.trylmaprojectdatabase.server.GameDatabase;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,15 +46,17 @@ public class ClientDB implements Runnable{
                 startingFrameCreation();
                 while(true)
                 {
-                    if(startingFrame.isReadyOldGame())
+                    if(startingFrame.getTypeOfGame() == GameDatabase.LOADED_GAME)
                     {
+                        out.println("WCZYTAJ_GRĘ");
                         out.println(startingFrame.getGameId());
                         out.println(startingFrame.getRoundId());
                         startingFrame.setVisible(false);
                         break;
                     }
-                    else if(startingFrame.isReadyNewGame())
+                    else
                     {
+                        out.println("NOWA_GRA");
                         startingFrame.setVisible(false);
                         break;
                     }
