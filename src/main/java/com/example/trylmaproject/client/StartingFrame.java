@@ -13,9 +13,10 @@ public class StartingFrame extends JFrame
 	private JButton replayGame;
 	private JButton startReplay;
 	private JComboBox<Integer> gameId;
-	private JComboBox<Integer> roundId;
+	private JLabel chosenGame;
 
 	private int typeOfGame = 0;
+	private int lastRound = 0;
 
 	private int[][] games;
 
@@ -59,9 +60,7 @@ public class StartingFrame extends JFrame
 
 		littlePanel = new JPanel();
 		littlePanel.setLayout(new GridLayout(2,2));
-
-		roundId = new JComboBox<>();
-		roundId.setEditable(false);
+		
 		gameId = new JComboBox<>();
 		gameId.setEditable(false);
 
@@ -70,22 +69,22 @@ public class StartingFrame extends JFrame
 		gameId.setSelectedItem(null);
 
 		gameId.addActionListener(e -> {
-		roundId.removeAllItems();
 			for(int i = 0; i<games.length;i++)
 				if(games[i][0] == (int)gameId.getSelectedItem()) {
 					for (int j = 0; j <= games[i][1]; j++)
-						roundId.addItem(j);
+						lastRound =  j;
 					break;
 				}
+			chosenGame.setText(Integer.toString(lastRound));
+				startReplay.setEnabled(true);
 		});
-		roundId.addActionListener(e -> {
-			startReplay.setEnabled(true);
-		});
+
+		chosenGame = new JLabel();
 
 		littlePanel.add(new JLabel("Id gry:"));
 		littlePanel.add(gameId);
-		littlePanel.add(new JLabel("Id ruchu"));
-		littlePanel.add(roundId);
+		littlePanel.add(new JLabel("Ostatni ruch:"));
+		littlePanel.add(chosenGame);
 
 		panel.setLayout(new GridLayout(2,1));
 		panel.add(littlePanel);
@@ -119,7 +118,7 @@ public class StartingFrame extends JFrame
 	}
 	public int getRoundId()
 	{
-		return (int)roundId.getSelectedItem();
+		return lastRound;
 	}
 
 }
