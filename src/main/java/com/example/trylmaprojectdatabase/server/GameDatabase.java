@@ -16,6 +16,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class GameDatabase extends Game {
+    /**
+     *
+     */
     private int typeOfGame = 0;
     public static final int NEW_GAME = 1;
     public static final int LOADED_GAME = 2;
@@ -51,7 +54,6 @@ public class GameDatabase extends Game {
                     //Czekanie na graczy i dodawanie ich do tablicy
                     try{
                         threads.execute(players[playerNumber] = new PlayerThreadDB(serverSocket.accept(), ++playerNumber));
-                        if(GAME_STARTED) playerNumber--;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -69,7 +71,7 @@ public class GameDatabase extends Game {
             }
             if(GAME_STARTED){
                 if(typeOfGame == LOADED_GAME){
-                    whoseTurn = jdbc.getLastPlayerTurn(old_id_gry, old_last_number);
+                    whoseTurn = jdbc.getLastPlayerTurn(old_id_gry, old_last_number) - 1;
                     whoseTurn = (whoseTurn + 1) % playerNumber;
                 }
                 else{
@@ -89,7 +91,12 @@ public class GameDatabase extends Game {
         @Override
         public void run() {
             //Jeśli gra się zaczęła, nie pozwalaj na start kolejnych wątków
+
+            player = new Player();
+            player.number = localNumber;
+
             if(GAME_STARTED) {
+                playerNumber--;
                 IS_ACTIVE = false;
                 return;
             }
@@ -108,22 +115,18 @@ public class GameDatabase extends Game {
 
 
             if(typeOfGame == LOADED_GAME && localNumber > maxPlayersInLoadedGame){
+                playerNumber--;
                 IS_ACTIVE = false;
                 return;
             }
 
             try{
-                player = new Player();
-                player.number = localNumber;
                 Scanner in = new Scanner(socket.getInputStream());
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 prepareForGame(in, oos);
-                while(true){
+                do {
                     waitForNewTurn();
-                    if(makeTurn(in, oos)){
-                        break;
-                    }
-                }
+                } while (!makeTurn(in, oos));
             }
             catch(IOException exception){
                 exception.printStackTrace();
@@ -132,13 +135,14 @@ public class GameDatabase extends Game {
 
         private boolean isAbleToStart(){
             if(typeOfGame == LOADED_GAME){
-                if(playerNumber >= maxPlayersInLoadedGame) return true;
+                if(playerNumber == maxPlayersInLoadedGame) return true;
                 else return false;
             }
             if(playerNumber < 2  || playerNumber == 5  || playerNumber > 6) return false;
             return true;
         }
 
+        @Override
         public void prepareForGame(Scanner in, ObjectOutputStream oos) throws IOException{
             //Wyślij numer gracza klientowi
             String line = "NUMER: " + player.number;
@@ -151,7 +155,6 @@ public class GameDatabase extends Game {
                     message = in.nextLine();
                 } while(message == null);
                 if(message.equals("WCZYTAJ_GRĘ")){
-                    typeOfGame = LOADED_GAME;
                     old_id_gry = Integer.parseInt(in.nextLine());
                     old_last_number = Integer.parseInt(in.nextLine());
                     id_gry = old_id_gry;
@@ -161,6 +164,7 @@ public class GameDatabase extends Game {
                         e.printStackTrace();
                     }
                     maxPlayersInLoadedGame = board.getNumberOfPlayers();
+                    typeOfGame = LOADED_GAME;
                 }
                 else{
                     id_gry = jdbc.createGame();
