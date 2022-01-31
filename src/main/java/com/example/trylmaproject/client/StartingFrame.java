@@ -5,8 +5,16 @@ import com.example.trylmaprojectdatabase.server.GameDatabase;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Klasa Implementująca okno wyboru nowej gry lub kontynuacji gry
+ * Umożliwia wybranie idGry
+ *  @author Mateusz Teplicki, Karol Dzwonkowski
+ */
 public class StartingFrame extends JFrame
 {
+	/**
+	 * Komponenty występujące w StartingFrame
+	 */
 	private JPanel panel;
 	private JPanel littlePanel;
 	private JButton playNewGame;
@@ -15,15 +23,28 @@ public class StartingFrame extends JFrame
 	private JComboBox<Integer> gameId;
 	private JLabel chosenGame;
 
+	/**
+	 * Zmienne sterujące rozgrywka
+	 */
 	private int typeOfGame = 0;
 	private int lastRound = 0;
 
+	/**
+	 * Tablica zapisanych gier wraz z ruchami
+	 */
 	private int[][] games;
 
+	/**
+	 * Predefiniowane wielkości okna
+	 */
 	int DEFAULT_WIDTH = 400;
 	int DEFAULT_HEIGHT = 200;
 
-
+	/**
+	 * Konstruktor Frame'a dla okna startowego.
+	 * Konstruktor wywołuje niezbędne metody tworzące.
+	 * @param tablica zapisanych gier wraz z ruchami
+	 */
 	public StartingFrame(int[][] games)
 	{
 		this.games = games;
@@ -33,6 +54,9 @@ public class StartingFrame extends JFrame
 		this.getContentPane().add(this.panel);
 		pack();
 	}
+	/**
+	 * Metoda przygotowująca panel do dodania go do Frame'a.
+	 */
 	private void setStartReplay()
 	{
 		panel = new JPanel();
@@ -53,11 +77,17 @@ public class StartingFrame extends JFrame
 		});
 		panel.add(replayGame);
 	}
+
+	/**
+	 * metoda zmieniająca zawartość głównego panelu w przypadku wybrania kontynuacji
+	 */
 	private void changePanel()
 	{
+		//usunięcie starych przycisków z panelu
 		panel.remove(playNewGame);
 		panel.remove(replayGame);
 
+		//stworzenie nowych elementów panelu
 		littlePanel = new JPanel();
 		littlePanel.setLayout(new GridLayout(2,2));
 		
@@ -71,8 +101,7 @@ public class StartingFrame extends JFrame
 		gameId.addActionListener(e -> {
 			for(int i = 0; i<games.length;i++)
 				if(games[i][0] == (int)gameId.getSelectedItem()) {
-					for (int j = 0; j <= games[i][1]; j++)
-						lastRound =  j;
+						lastRound =  games[i][1];
 					break;
 				}
 			chosenGame.setText(Integer.toString(lastRound));
@@ -81,6 +110,7 @@ public class StartingFrame extends JFrame
 
 		chosenGame = new JLabel();
 
+		//dodanie nowych elementów panelu
 		littlePanel.add(new JLabel("Id gry:"));
 		littlePanel.add(gameId);
 		littlePanel.add(new JLabel("Ostatni ruch:"));
@@ -101,6 +131,10 @@ public class StartingFrame extends JFrame
 		pack();
 		repaint();
 	}
+
+	/**
+	 * @return 1 - nowa gra, 2 - kontynuacja gry
+	 */
 	public int getTypeOfGame()
 	{
 		synchronized (this){
