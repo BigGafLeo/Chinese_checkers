@@ -2,6 +2,7 @@ package com.example.trylmaprojectdatabase.database;
 
 import com.example.trylmaproject.exceptions.IllegalNumberOfPlayers;
 import com.example.trylmaproject.server.Board;
+import com.example.trylmaprojectdatabase.server.GameDatabase;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -51,13 +52,20 @@ public class SpringJdbcConfig {
         return jdbcInsert.executeAndReturnKey(parameters).intValue();
     }
 
-    public void addPlayer(int id_gry, int playerNumber, String name){
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("gracze");
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("id_gry", id_gry);
-        parameters.put("id_gracza", playerNumber);
-        parameters.put("nazwa", name);
-        jdbcInsert.execute(parameters);
+    public void addPlayer(int id_gry, int playerNumber, String name, int typeOfGame){
+        if(typeOfGame == GameDatabase.LOADED_GAME){
+            var query = "UPDATE gracze SET nazwa = '" + name +"' WHERE id_gry = " + id_gry + " AND id_gracza = " + playerNumber;
+            jdbcTemplate.update(query);
+        }
+        else{
+            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("gracze");
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("id_gry", id_gry);
+            parameters.put("id_gracza", playerNumber);
+            parameters.put("nazwa", name);
+            jdbcInsert.execute(parameters);
+        }
+
     }
 
     public void startGame(int id_gry){
@@ -96,6 +104,13 @@ public class SpringJdbcConfig {
         return test;
     }
 
+    public int getLastPlayerTurn(int id_gry, int ruch){
+        return jdbcTemplate.queryForObject("SELECT id_gracza FROM ruch where id_ruchu = (SELECT MAX(id_ruchu) FROM (SELECT id_gracza, id_ruchu FROM ruch WHERE id_gry = " + id_gry + " ORDER BY id_ruchu LIMIT " + ruch +" ) as igir)", Integer.class);
+    }
+
+    public void deleteAllPlayers(int id_gry){
+        jdbcTemplate.update("DELETE FROM gracze WHERE id_gry = " + id_gry);
+    }
 
 }
 

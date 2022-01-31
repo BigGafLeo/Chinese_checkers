@@ -14,9 +14,10 @@ public class BoardRowMapper implements RowMapper<Board> {
     public Board mapRow(ResultSet rs, int i) throws SQLException {
         try {
             Board board = new Board(numberOfPlayers);
-            while(rs.next()){
+            do{
                 board.doMove(rs.getInt(1),rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getInt(5));
-            }
+                board.resetMoveablePawn();
+            } while(rs.next());
             return board;
         } catch (IllegalNumberOfPlayers | IllegalMoveException e) {
             e.printStackTrace();

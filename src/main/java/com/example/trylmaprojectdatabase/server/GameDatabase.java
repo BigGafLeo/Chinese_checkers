@@ -21,7 +21,12 @@ public class GameDatabase extends Game {
     public static final int LOADED_GAME = 2;
     protected SpringJdbcConfig jdbc;
     protected int id_gry;
+
+
     private int maxPlayersInLoadedGame;
+    private int old_id_gry;
+    private int old_last_number;
+
 
     /**
      * @param serverSocketNumber port, na którym będzie działać serwer
@@ -36,7 +41,6 @@ public class GameDatabase extends Game {
     @Override
     public void run() {
         jdbc = new SpringJdbcConfig();
-        id_gry = jdbc.createGame();
 
         ExecutorService playerCreatorThread = Executors.newFixedThreadPool(1);
         playerCreatorThread.execute(new Game.PlayerCreator(){
@@ -45,7 +49,7 @@ public class GameDatabase extends Game {
                 ExecutorService threads = Executors.newFixedThreadPool(6);
                 while(playerNumber< Board.MAX_PLAYERS && !GAME_STARTED){
                     //Czekanie na graczy i dodawanie ich do tablicy
-                    try {
+                    try{
                         threads.execute(players[playerNumber] = new PlayerThreadDB(serverSocket.accept(), ++playerNumber));
                         if(GAME_STARTED) playerNumber--;
                     } catch (IOException e) {
@@ -64,7 +68,13 @@ public class GameDatabase extends Game {
                 }
             }
             if(GAME_STARTED){
-                whoseTurn = (int)(Math.floor(Math.random() * (playerNumber)));
+                if(typeOfGame == LOADED_GAME){
+                    whoseTurn = jdbc.getLastPlayerTurn(old_id_gry, old_last_number);
+                    whoseTurn = (whoseTurn + 1) % playerNumber;
+                }
+                else{
+                    whoseTurn = (int)(Math.floor(Math.random() * (playerNumber)));
+                }
                 runGame();
             }
         }
@@ -142,16 +152,18 @@ public class GameDatabase extends Game {
                 } while(message == null);
                 if(message.equals("WCZYTAJ_GRĘ")){
                     typeOfGame = LOADED_GAME;
-                    var id = in.nextLine();
-                    var moveNumber = in.nextLine();
-                    try {
-                        board = jdbc.getSavedBoard(Integer.parseInt(id), Integer.parseInt(moveNumber));
-                    } catch (IllegalNumberOfPlayers e) {
+                    old_id_gry = Integer.parseInt(in.nextLine());
+                    old_last_number = Integer.parseInt(in.nextLine());
+                    id_gry = old_id_gry;
+                    try{
+                        board = jdbc.getSavedBoard(old_id_gry, old_last_number);
+                    }catch (IllegalNumberOfPlayers e) {
                         e.printStackTrace();
                     }
                     maxPlayersInLoadedGame = board.getNumberOfPlayers();
                 }
                 else{
+                    id_gry = jdbc.createGame();
                     typeOfGame = NEW_GAME;
                 }
 
@@ -163,7 +175,7 @@ public class GameDatabase extends Game {
                 oos.writeObject("IMIE:");
                 player.name = in.nextLine();
             } while (player.name.isBlank());
-            jdbc.addPlayer(id_gry, player.number, player.name);
+            jdbc.addPlayer(id_gry, player.number, player.name, typeOfGame);
 
             //Czekaj, aż gracz numer jeden da poprawny sygnał do startu
             if(player.number == 1){
